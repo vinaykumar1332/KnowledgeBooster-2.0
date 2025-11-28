@@ -1,0 +1,42 @@
+/* src/components/navbar/navbar.css */
+.navbar-variables {
+    --nav-bg: #ffffff;
+    --nav-border: #e2e8f0;
+    --nav-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --nav-height: 70px;
+    --nav-link-color: #475569;
+    --nav-link-hover: #6366f1;
+    --nav-logo-size: 2.2rem;
+}
+
+.navbar-container {
+    height: var(--nav-height);
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--nav-border);
+    box-shadow: var(--nav-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.navbar-content {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar-content {
+        padding: 0 1rem;
+    }
+
+    :root {
+        --nav-height: 64px;
+    }
+}
