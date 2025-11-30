@@ -11,7 +11,7 @@
 
 @font-face {
     font-family: "Science Gothic";
-    src: url("/fonts/science-gothic/ScienceGothic-Regular.woff2") format("woff2");
+    src: url("../../public/fonts/Science_Gothic/static/ScienceGothic-Light.ttf") format("woff2");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -19,7 +19,7 @@
 
 @font-face {
     font-family: "Science Gothic";
-    src: url("/fonts/science-gothic/ScienceGothic-Bold.woff2") format("woff2");
+    src: url("../../public/fonts/Science_Gothic/static/ScienceGothic-Bold.ttf") format("woff2");
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -28,13 +28,12 @@
 /* How to apply it to elements */
 body {
     font-family: 'Science Gothic', sans-serif;
+    font-weight: 400;
 }
 
 h1,
 h2,
 h3 {
-    /* You might use a heavier weight if you have the variable version, 
-     otherwise, the regular weight will just be bolded by the browser */
     font-family: 'Science Gothic', sans-serif;
     font-weight: 700;
 }
