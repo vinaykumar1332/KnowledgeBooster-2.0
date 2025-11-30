@@ -4,11 +4,10 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import ToastNotification from "../../components/toast/ToastNotification";
+import API_CONFIG from "../../config/Api.config"; // ← Uses your config
 import "./login.css";
 
 export default function Signup() {
-    const API_URL = "/api/appProxy";
-
     const [form, setForm] = useState({
         username: "",
         email: "",
@@ -16,8 +15,8 @@ export default function Signup() {
         userType: null,
     });
 
+    const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState(null);
-    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const userTypes = [
         { label: "Student", value: "student" },
@@ -32,31 +31,44 @@ export default function Signup() {
         { test: /[!@#$%^&*]/.test(form.password), text: "1 special character (!@#$%^&*)" },
     ];
 
-    const allValid = passwordRules.every(rule => rule.test);
+    const allValid = passwordRules.every((rule) => rule.test);
 
-    const showToast = (msg, type = "error") => {
-        setToast({ message: msg, type });
+    const showToast = (message, type = "error") => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 5000);
     };
 
     const handleSignup = async (e) => {
         e.preventDefault();
 
-        if (!allValid) {
-            showToast("Please fix password requirements");
-            return;
+        if (!form.username || !form.email || !form.password || !form.userType) {
+            return showToast("Please fill all fields");
         }
 
+        if (!allValid) {
+            return showToast("Password does not meet requirements");
+        }
+
+        setLoading(true);
+
         try {
-            const res = await fetch(API_URL, {
+            const res = await fetch(API_CONFIG.PROXY_URL, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "signup", ...form }),
+                headers: API_CONFIG.HEADERS,
+                body: JSON.stringify({
+                    script: "AUTH",           // ← Important: tells proxy which script
+                    action: "signup",         // ← Your Apps Script action
+                    username: form.username.trim(),
+                    email: form.email.trim().toLowerCase(),
+                    password: form.password,
+                    userType: form.userType,
+                }),
             });
 
             const data = await res.json();
 
             if (!data.ok) {
-                showToast(data.msg || "Signup failed");
+                showToast(data.msg || data.message || "Signup failed");
                 return;
             }
 
@@ -65,13 +77,22 @@ export default function Signup() {
                 window.location.href = "/login";
             }, 2000);
         } catch (err) {
-            showToast("Network error. Try again.");
+            console.error("Signup error:", err);
+            showToast("Connection failed. Check internet or try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <>
-            {toast && <ToastNotification message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+            {toast && (
+                <ToastNotification
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
 
             <div className="auth-page">
                 <div className="auth-card">
@@ -79,8 +100,11 @@ export default function Signup() {
                         <i className="pi pi-user-plus mr-2" />
                         Create Account
                     </h1>
+                    <p className="text-center text-gray-600 mb-6">
+                        Join us today — it's free and quick!
+                    </p>
 
-                    <form onSubmit={handleSignup}>
+                    <form onSubmit={handleSignup} className="space-y-5">
                         <div className="field">
                             <label>
                                 <i className="pi pi-user mr-2" />
@@ -90,6 +114,7 @@ export default function Signup() {
                                 value={form.username}
                                 onChange={(e) => setForm({ ...form, username: e.target.value })}
                                 placeholder="John Doe"
+                                className="w-full"
                                 required
                             />
                         </div>
@@ -104,6 +129,7 @@ export default function Signup() {
                                 value={form.email}
                                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                                 placeholder="you@example.com"
+                                className="w-full"
                                 required
                             />
                         </div>
@@ -113,21 +139,23 @@ export default function Signup() {
                                 <i className="pi pi-lock mr-2" />
                                 Password
                             </label>
-                            <div className="p-inputgroup">
-                                <Password
-                                    value={form.password}
-                                    onChange={(e) => setForm({ ...form, password: e.target.value })}
-                                    feedback={false}
-                                    toggleMask
-                                    inputClassName="w-full"
-                                    className="w-full"
-                                />
-                            </div>
+                            <Password
+                                value={form.password}
+                                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                                feedback={false}
+                                toggleMask
+                                placeholder="Create a strong password"
+                                className="w-full"
+                            />
 
-                            <div className="password-rules">
+                            <div className="password-rules mt-3">
                                 {passwordRules.map((rule, i) => (
-                                    <div key={i} className={`rule ${rule.test ? "valid" : "invalid"}`}>
-                                        <i className={`pi ${rule.test ? "pi-check" : "pi-times"}`} />
+                                    <div
+                                        key={i}
+                                        className={`rule text-sm flex items-center gap-2 ${rule.test ? "text-green-600" : "text-red-500"
+                                            }`}
+                                    >
+                                        <i className={`pi text-xs ${rule.test ? "pi-check-circle" : "pi-times-circle"}`} />
                                         {rule.text}
                                     </div>
                                 ))}
@@ -137,7 +165,7 @@ export default function Signup() {
                         <div className="field">
                             <label>
                                 <i className="pi pi-users mr-2" />
-                                User Type
+                                I am a
                             </label>
                             <Dropdown
                                 value={form.userType}
@@ -145,18 +173,35 @@ export default function Signup() {
                                 onChange={(e) => setForm({ ...form, userType: e.value })}
                                 placeholder="Select your role"
                                 className="w-full"
+                                required
                             />
                         </div>
 
-                        <button type="submit" className="auth-btn primary w-full">
-                            <i className="pi pi-check mr-2" />
-                            Create Account
+                        <button
+                            type="submit"
+                            className="auth-btn primary w-full mt-6"
+                            disabled={loading || !allValid}
+                        >
+                            {loading ? (
+                                <>
+                                    <i className="pi pi-spin pi-spinner mr-2" />
+                                    Creating Account...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="pi pi-check mr-2" />
+                                    Create Account
+                                </>
+                            )}
                         </button>
-
-                        <p className="auth-foot">
-                            Already have an account? <a href="/login">Login here</a>
-                        </p>
                     </form>
+
+                    <p className="auth-foot mt-6">
+                        Already have an account?{" "}
+                        <a href="/login" className="text-blue-600 font-medium hover:underline">
+                            Login here
+                        </a>
+                    </p>
                 </div>
             </div>
         </>
