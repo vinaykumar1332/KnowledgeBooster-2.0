@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import ToastNotification from "../../components/toast/ToastNotification";
+import API_CONFIG from "../../config/Api.config"; // Import config
 import "./login.css";
 
 export default function Login() {
@@ -20,11 +21,17 @@ export default function Login() {
         if (!email || !password) return showToast("Fill all fields");
 
         setLoading(true);
+
         try {
-            const res = await fetch("/api/appProxy", {
+            const res = await fetch(API_CONFIG.PROXY_URL, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "login", email, password }),
+                headers: API_CONFIG.HEADERS,
+                body: JSON.stringify({
+                    script: "AUTH",
+                    action: "login",
+                    email: email.trim(),
+                    password,
+                }),
             });
 
             const data = await res.json();
@@ -35,15 +42,16 @@ export default function Login() {
             }
 
             sessionStorage.setItem("auth", JSON.stringify(data));
-            showToast("Welcome back!", "success");
+            showToast("Login successful!", "success");
             setTimeout(() => navigate("/"), 1500);
         } catch (err) {
-            showToast("Login failed. Try again.");
+            showToast("Connection failed");
         } finally {
             setLoading(false);
         }
     };
 
+    // ... rest of your JSX (unchanged)
     return (
         <>
             {toast && <ToastNotification message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
