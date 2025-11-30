@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   }
 
   // Replace with your Apps Script URL (or use env var)
-  const APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL_LOGIN_SIGNUP;
+  const APPS_SCRIPT_URL ="https://script.google.com/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec";
 
   try {
     const response = await fetch(APPS_SCRIPT_URL, {
