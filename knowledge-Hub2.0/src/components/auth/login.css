@@ -1,0 +1,80 @@
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    /* Changed from var(--white) */
+    background: var(--kh-white);
+    /* Changed from var(--border10) */
+    border: 1px solid var(--kh-border-10);
+    /* Changed from var(--radius) */
+    border-radius: var(--kh-radius);
+    padding: 36px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.auth-card h1 {
+    /* Changed from var(--font-display) */
+    font-family: var(--kh-font-display);
+    text-align: center;
+    margin-bottom: 26px;
+    font-size: 28px;
+}
+
+label {
+    /* Changed from var(--font-body) */
+    font-family: var(--kh-font-body);
+    margin-top: 10px;
+    display: block;
+    font-size: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    /* Changed from var(--border10) */
+    border: 1px solid var(--kh-border-10);
+    /* Changed from var(--radius) */
+    border-radius: var(--kh-radius);
+    /* Changed from var(--font-body) */
+    font-family: var(--kh-font-body);
+}
+
+.auth-btn.primary {
+    width: 100%;
+    /* Changed from var(--black) */
+    background: var(--kh-black);
+    /* Changed from var(--white) */
+    color: var(--kh-white);
+    padding: 14px;
+    /* Changed from var(--radius) */
+    border-radius: var(--kh-radius);
+    border: none;
+    margin-top: 22px;
+    cursor: pointer;
+    /* Changed from var(--font-display) */
+    font-family: var(--kh-font-display);
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.auth-btn.primary:hover {
+    opacity: 0.85;
+}
+
+.auth-dropdown {
+    margin-top: 6px;
+    width: 100% !important;
+}
+
+.auth-foot {
+    text-align: center;
+    margin-top: 20px;
+    /* Changed from var(--font-body) */
+    font-family: var(--kh-font-body);
+}
+
+.auth-foot a {
+    /* Changed from var(--black) */
+    color: var(--kh-black);
+    text-decoration: underline;
+}

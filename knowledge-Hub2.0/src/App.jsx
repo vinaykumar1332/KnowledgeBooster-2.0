@@ -1,30 +1,60 @@
 // src/App.jsx
-import Layout from './components/Layout';
-import { Card } from 'primereact/card';
-import { Button } from 'primereact/button';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Navigation from "./components/navbar/Navigation";
+import Login from "./components/auth/Login";
+import Signup from "./components/auth/Signup";
+
+function ProtectedRoute({ children }) {
+  const auth = JSON.parse(sessionStorage.getItem("auth") || "{}");
+  return auth?.email ? children : <Navigate to="/login" replace />;
+}
 
 function App() {
-  return (
-    <Layout>
-      <div className="text-center py-12">
-        <h1 className="text-5xl font-bold text-primary mb-4">
-          Welcome to KnowledgeHub
-        </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-          Your single-page knowledge website is now live with beautiful responsive navbar!
-        </p>
-        <Button label="Start Learning" icon="pi pi-arrow-right" size="large" />
-      </div>
+  const [auth, setAuth] = useState(null);
+  useEffect(() => {
+    const loadAuth = () => {
+      const stored = sessionStorage.getItem("auth");
+      setAuth(stored ? JSON.parse(stored) : null);
+    };
 
-      <div className="grid mt-12">
-        <div className="col-12 md:col-6 lg:col-4">
-          <Card title="Explore Topics" className="h-full">
-            <p>Browse hundreds of topics from science to philosophy.</p>
-          </Card>
-        </div>
-        {/* Add more cards as needed */}
-      </div>
-    </Layout>
+    loadAuth();
+    window.addEventListener("authChange", loadAuth);
+    return () => {
+      window.removeEventListener("authChange", loadAuth);
+    };
+  }, []);
+
+  return (
+    <BrowserRouter>
+      {auth?.email && (
+        <Navigation userName={auth.username} userEmail={auth.email} />
+      )}
+
+      <Routes>
+        {/* Public */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <div className="text-center py-12">
+                <h1 className="text-5xl font-bold mb-4">
+                  Welcome, {auth?.username || ""}
+                </h1>
+                <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+                  This is your KnowledgeHub dashboard.
+                </p>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Any unknown route → redirect to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
