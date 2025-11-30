@@ -1,0 +1,40 @@
+/* In your global CSS file (e.g., globals.css or styles.css) */
+:root {
+    --kh-black: #000;
+    --kh-white: #fff;
+    --kh-border-10: rgba(0, 0, 0, 0.10);
+    --kh-radius: 12px;
+    --kh-space: 16px;
+    --kh-font-display: "Science Gothic", "Playfair Display", serif;
+    --kh-font-body: "Science Gothic", "Playfair Display", serif;
+}
+
+@font-face {
+    font-family: "Science Gothic";
+    src: url("/fonts/science-gothic/ScienceGothic-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Science Gothic";
+    src: url("/fonts/science-gothic/ScienceGothic-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* How to apply it to elements */
+body {
+    font-family: 'Science Gothic', sans-serif;
+}
+
+h1,
+h2,
+h3 {
+    /* You might use a heavier weight if you have the variable version, 
+     otherwise, the regular weight will just be bolded by the browser */
+    font-family: 'Science Gothic', sans-serif;
+    font-weight: 700;
+}
