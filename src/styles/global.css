@@ -11,7 +11,7 @@
 
 @font-face {
     font-family: "Science Gothic";
-    src: url("../../public/fonts/Science_Gothic/static/ScienceGothic-Light.ttf") format("woff2");
+    src: url("/fonts/Science_Gothic/static/ScienceGothic-Light.ttf") format("woff2");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -19,7 +19,7 @@
 
 @font-face {
     font-family: "Science Gothic";
-    src: url("../../public/fonts/Science_Gothic/static/ScienceGothic-Bold.ttf") format("woff2");
+    src: url("/fonts/Science_Gothic/static/ScienceGothic-Bold.ttf") format("woff2");
     font-weight: 700;
     font-style: normal;
     font-display: swap;
