@@ -1,10 +1,10 @@
-// pages/Login.jsx
+// src/pages/auth/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import ToastNotification from "../../components/toast/ToastNotification";
-import API_CONFIG from "../../config/Api.config"; // Import config
+import API_CONFIG from "../../config/Api.config"; // your config (contains PROXY_URL etc)
 import "./login.css";
 
 export default function Login() {
@@ -33,25 +33,25 @@ export default function Login() {
                     password,
                 }),
             });
-
-            const data = await res.json();
+            const data = await res.json().catch(() => ({ ok: false, msg: "Invalid server response" }));
 
             if (!data.ok) {
                 showToast(data.msg || "Invalid credentials");
                 return;
             }
-
             sessionStorage.setItem("auth", JSON.stringify(data));
+            window.dispatchEvent(new Event("authChange"));
+
             showToast("Login successful!", "success");
-            setTimeout(() => navigate("/"), 1500);
+            setTimeout(() => navigate("/home"), 600);
         } catch (err) {
+            console.error("Login error:", err);
             showToast("Connection failed");
         } finally {
             setLoading(false);
         }
     };
 
-    // ... rest of your JSX (unchanged)
     return (
         <>
             {toast && <ToastNotification message={toast.message} type={toast.type} onClose={() => setToast(null)} />}

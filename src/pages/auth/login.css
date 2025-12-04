@@ -78,3 +78,7 @@ input {
     color: var(--kh-black);
     text-decoration: underline;
 }
+
+.kh-avatar.small {
+    display: none;
+}
