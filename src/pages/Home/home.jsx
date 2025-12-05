@@ -1,6 +1,6 @@
 // src/pages/Home/home.jsx
 import React from "react";
-
+import "./home.css"
 function HomePage() {
     return (
         <div className="min-h-screen bg-gray-50">

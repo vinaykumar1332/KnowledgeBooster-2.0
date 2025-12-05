@@ -1,7 +1,6 @@
 // src/App.jsx
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
 import Navigation from "./components/navbar/Navigation";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
