@@ -1,10 +1,10 @@
 // pages/Signup.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import ToastNotification from "../../components/toast/ToastNotification";
-import API_CONFIG from "../../config/Api.config"; // ← Uses your config
+import API_CONFIG from "../../config/Api.config";
 import "./login.css";
 
 export default function Signup() {
@@ -17,6 +17,7 @@ export default function Signup() {
 
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState(null);
+    const [touched, setTouched] = useState({}); // Track which fields user touched
 
     const userTypes = [
         { label: "Student", value: "student" },
@@ -32,6 +33,14 @@ export default function Signup() {
     ];
 
     const allValid = passwordRules.every((rule) => rule.test);
+    const hasPasswordInput = form.password.length > 0;
+    const showPasswordRules = hasPasswordInput && !allValid; // Only show when typing & invalid
+
+    const isFormValid =
+        form.username.trim() &&
+        form.email.trim().includes("@") &&
+        form.userType &&
+        allValid;
 
     const showToast = (message, type = "error") => {
         setToast({ message, type });
@@ -41,12 +50,9 @@ export default function Signup() {
     const handleSignup = async (e) => {
         e.preventDefault();
 
-        if (!form.username || !form.email || !form.password || !form.userType) {
-            return showToast("Please fill all fields");
-        }
-
-        if (!allValid) {
-            return showToast("Password does not meet requirements");
+        if (!isFormValid) {
+            showToast("Please fix the errors above");
+            return;
         }
 
         setLoading(true);
@@ -56,8 +62,8 @@ export default function Signup() {
                 method: "POST",
                 headers: API_CONFIG.HEADERS,
                 body: JSON.stringify({
-                    script: "AUTH",           // ← Important: tells proxy which script
-                    action: "signup",         // ← Your Apps Script action
+                    script: "AUTH",
+                    action: "signup",
                     username: form.username.trim(),
                     email: form.email.trim().toLowerCase(),
                     password: form.password,
@@ -78,7 +84,7 @@ export default function Signup() {
             }, 2000);
         } catch (err) {
             console.error("Signup error:", err);
-            showToast("Connection failed. Check internet or try again.");
+            showToast("Connection failed. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -97,7 +103,6 @@ export default function Signup() {
             <div className="auth-page">
                 <div className="auth-card">
                     <h1>
-                        <i className="pi pi-user-plus mr-2" />
                         Create Account
                     </h1>
                     <p className="text-center text-gray-600 mb-6">
@@ -105,55 +110,58 @@ export default function Signup() {
                     </p>
 
                     <form onSubmit={handleSignup} className="space-y-5">
+                        {/* Full Name */}
                         <div className="field">
-                            <label>
-                                <i className="pi pi-user mr-2" />
-                                Full Name
-                            </label>
+                            <label> Full Name</label>
                             <InputText
                                 value={form.username}
                                 onChange={(e) => setForm({ ...form, username: e.target.value })}
+                                onBlur={() => setTouched({ ...touched, username: true })}
                                 placeholder="John Doe"
-                                className="w-full"
+                                className={`w-full ${touched.username && !form.username.trim() ? "p-invalid" : ""}`}
                                 required
                             />
+                            {touched.username && !form.username.trim() && (
+                                <small className="p-error">Name is required</small>
+                            )}
                         </div>
 
+                        {/* Email */}
                         <div className="field">
-                            <label>
-                                <i className="pi pi-envelope mr-2" />
-                                Email Address
-                            </label>
+                            <label> Email Address</label>
                             <InputText
                                 type="email"
                                 value={form.email}
                                 onChange={(e) => setForm({ ...form, email: e.target.value })}
+                                onBlur={() => setTouched({ ...touched, email: true })}
                                 placeholder="you@example.com"
-                                className="w-full"
+                                className={`w-full ${touched.email && !form.email.includes("@") ? "p-invalid" : ""}`}
                                 required
                             />
+                            {touched.email && !form.email.includes("@") && (
+                                <small className="p-error">Valid email required</small>
+                            )}
                         </div>
 
+                        {/* Password */}
                         <div className="field">
-                            <label>
-                                <i className="pi pi-lock mr-2" />
-                                Password
-                            </label>
+                            <label> Password</label>
                             <Password
                                 value={form.password}
                                 onChange={(e) => setForm({ ...form, password: e.target.value })}
+                                onFocus={() => setTouched({ ...touched, password: true })}
                                 feedback={false}
                                 toggleMask
                                 placeholder="Create a strong password"
                                 className="w-full"
                             />
 
-                            <div className="password-rules mt-3">
+                            {/* Show rules only when user types password & it's invalid */}
+                            <div className={`password-rules mt-3 transition-all duration-300 ${showPasswordRules ? "opacity-100 max-h-96" : "opacity-0 max-h-0 overflow-hidden"}`}>
                                 {passwordRules.map((rule, i) => (
                                     <div
                                         key={i}
-                                        className={`rule text-sm flex items-center gap-2 ${rule.test ? "text-green-600" : "text-red-500"
-                                            }`}
+                                        className={`rule text-sm flex items-center gap-2 ${rule.test ? "text-green-600" : "text-red-500"}`}
                                     >
                                         <i className={`pi text-xs ${rule.test ? "pi-check-circle" : "pi-times-circle"}`} />
                                         {rule.text}
@@ -162,38 +170,32 @@ export default function Signup() {
                             </div>
                         </div>
 
+                        {/* User Type Dropdown - Fixed: no layout shift */}
                         <div className="field">
-                            <label>
-                                <i className="pi pi-users mr-2" />
-                                I am a
-                            </label>
+                            <label> I am a</label>
                             <Dropdown
                                 value={form.userType}
                                 options={userTypes}
                                 onChange={(e) => setForm({ ...form, userType: e.value })}
                                 placeholder="Select your role"
                                 className="w-full"
+                                panelClassName="z-50" // Ensures dropdown floats above everything
                                 required
                             />
                         </div>
 
-                        <button
-                            type="submit"
-                            className="auth-btn primary w-full mt-6"
-                            disabled={loading || !allValid}
-                        >
-                            {loading ? (
-                                <>
-                                    <i className="pi pi-spin pi-spinner mr-2" />
-                                    Creating Account...
-                                </>
-                            ) : (
-                                <>
-                                    <i className="pi pi-check mr-2" />
-                                    Create Account
-                                </>
-                            )}
-                        </button>
+                        {/* Submit Button - Clean & Consistent */}
+                        <div className="drop-down-sign-up">
+                            <button
+                                type="submit"
+                                className="btn-primary btn"
+                                disabled={loading || !isFormValid}
+                            >
+                                <span className="btn-text">
+                                    {loading ? "Creating Account..." : "Create Account"}
+                                </span>
+                            </button>
+                        </div>
                     </form>
 
                     <p className="auth-foot mt-6">

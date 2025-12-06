@@ -91,13 +91,20 @@ export default function Login() {
                             />
                         </div>
 
-                        <button type="submit" className="auth-btn primary w-full" disabled={loading}>
-                            {loading ? "Signing in..." : "Login"}
+                        <button type="submit" className="btn-primary btn" disabled={loading}>
+                            <a href="#!" className="btn-text" onClick={(e) => e.preventDefault()}>
+                                {loading ? "Signing in..." : "Login"}
+                            </a>
                         </button>
 
-                        <p className="auth-foot">
-                            New here? <a href="/signup">Create account</a>
-                        </p>
+                        <div className="auth-foot">
+                            New here?
+                            <button className="btn-secondary btn">
+                                <a href="/signup" className="btn-text">
+                                    Sign UP
+                                </a>
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>

@@ -1,18 +1,20 @@
+.auth-page {
+    display: grid;
+    place-items: center;
+}
+
 .auth-card {
     width: 100%;
     max-width: 420px;
-    /* Changed from var(--white) */
     background: var(--kh-white);
-    /* Changed from var(--border10) */
     border: 1px solid var(--kh-border-10);
-    /* Changed from var(--radius) */
-    border-radius: var(--kh-radius);
     padding: 36px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    position: relative;
+    top: 20%;
 }
 
 .auth-card h1 {
-    /* Changed from var(--font-display) */
     font-family: var(--kh-font-display);
     text-align: center;
     margin-bottom: 26px;
@@ -20,7 +22,6 @@
 }
 
 label {
-    /* Changed from var(--font-body) */
     font-family: var(--kh-font-body);
     margin-top: 10px;
     display: block;
@@ -31,27 +32,19 @@ input {
     width: 100%;
     padding: 12px;
     margin-top: 6px;
-    /* Changed from var(--border10) */
     border: 1px solid var(--kh-border-10);
-    /* Changed from var(--radius) */
-    border-radius: var(--kh-radius);
-    /* Changed from var(--font-body) */
     font-family: var(--kh-font-body);
 }
 
 .auth-btn.primary {
     width: 100%;
-    /* Changed from var(--black) */
     background: var(--kh-black);
-    /* Changed from var(--white) */
     color: var(--kh-white);
     padding: 14px;
-    /* Changed from var(--radius) */
     border-radius: var(--kh-radius);
     border: none;
     margin-top: 22px;
     cursor: pointer;
-    /* Changed from var(--font-display) */
     font-family: var(--kh-font-display);
     font-size: 16px;
     transition: 0.2s;
@@ -69,16 +62,48 @@ input {
 .auth-foot {
     text-align: center;
     margin-top: 20px;
-    /* Changed from var(--font-body) */
     font-family: var(--kh-font-body);
 }
 
 .auth-foot a {
-    /* Changed from var(--black) */
     color: var(--kh-black);
     text-decoration: underline;
 }
 
 .kh-avatar.small {
     display: none;
+}
+
+.landing-btn-text {
+    font-style: normal;
+}
+
+.p-icon-field-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.p-password-input {
+    width: 420px;
+}
+
+.p-icon-field-right {
+    .p-input-icon {
+        position: relative;
+        top: 5px;
+        right: 30px;
+
+        svg {
+            width: 22px;
+            height: 22px;
+        }
+    }
+}
+
+.drop-down-sign-up {
+    margin-top: 90px;
 }

@@ -31,6 +31,7 @@ body {
     font-weight: 400;
     margin-top: 0px;
     margin-left: 0px;
+    margin-right: 0px;
 }
 
 h1,
@@ -38,4 +39,53 @@ h2,
 h3 {
     font-family: 'Science Gothic', sans-serif;
     font-weight: 700;
+}
+
+
+
+.btn {
+    width: 100%;
+    padding: 1rem;
+    cursor: pointer;
+
+    .btn-text {
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 600;
+        font-family: var(--kh-font-body);
+    }
+}
+
+/* PRIMARY (Black background, white text) */
+.btn-primary {
+    background: var(--kh-black, #000);
+    border: 1px solid var(--kh-black);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+
+    .btn-text {
+        color: var(--kh-white, #fff);
+    }
+}
+
+.landing-btn.primary:hover {
+    background: #111;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+}
+
+/* SECONDARY (White background, black text, border) */
+.btn-secondary {
+    background: var(--kh-white);
+    border: 1px solid var(--kh-black);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    .btn-text {
+        color: var(--kh-black);
+    }
+}
+
+.landing-btn.secondary:hover {
+    background: #f8f8f8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
