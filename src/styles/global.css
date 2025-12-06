@@ -73,7 +73,6 @@ h3 {
     box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
 }
 
-/* SECONDARY (White background, black text, border) */
 .btn-secondary {
     background: var(--kh-white);
     border: 1px solid var(--kh-black);

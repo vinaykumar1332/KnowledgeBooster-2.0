@@ -1,11 +1,15 @@
 // src/App.jsx
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import Navigation from "./components/navbar/Navigation";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import LandingPage from "./pages/LandingPage";
 import HomePage from "./pages/Home/home";
+
+import UploadPage from "./pages/upload/UploadPage";
+import FilesPage from "./pages/files/FilesPage";
 
 // Protected = requires auth
 function ProtectedRoute({ children }) {
@@ -71,12 +75,30 @@ function AppRoutes() {
           }
         />
 
-        {/* Protected home */}
+        {/* Protected pages */}
         <Route
           path="/home"
           element={
             <ProtectedRoute>
               <HomePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/upload"
+          element={
+            <ProtectedRoute>
+              <UploadPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/files"
+          element={
+            <ProtectedRoute>
+              <FilesPage />
             </ProtectedRoute>
           }
         />
