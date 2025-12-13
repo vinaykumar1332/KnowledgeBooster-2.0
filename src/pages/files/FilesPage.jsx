@@ -1,12 +1,19 @@
 // src/pages/files/FilesPage.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { fetchFiles } from "../../services/filesService";
 import FileCard from "../../components/cards/FileCard";
+import FilePreviewModal from "../../components/preview/FilePreviewModal";
+import ToastNotification from "../../components/toast/ToastNotification";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { InputText } from "primereact/inputtext";
 import "./FilesPage.css";
 
 export default function FilesPage() {
-    const [files, setFiles] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [files, setFiles] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [query, setQuery] = useState("");
+    const [preview, setPreview] = useState(null);
+    const [toast, setToast] = useState(null);
 
     useEffect(() => {
         load();
@@ -15,50 +22,88 @@ export default function FilesPage() {
     async function load() {
         setLoading(true);
         try {
-            const data = await fetchFiles();
-            if (data.ok && Array.isArray(data.rows)) {
-                setFiles(data.rows.reverse());
-            } else if (data.ok && Array.isArray(data)) {
-                // some scripts return raw array
-                setFiles(data.reverse());
-            } else {
-                console.warn("fetchFiles returned:", data);
-                setFiles([]);
+            const res = await fetchFiles();
+            if (res.ok && Array.isArray(res.rows)) {
+                setFiles(res.rows.reverse());
+                setToast({
+                    type: "success",
+                    message: "Files loaded successfully. Happy learning 📚",
+                });
             }
-        } catch (err) {
-            console.error("fetchFiles error:", err);
-            setFiles([]);
+        } catch {
+            setToast({ type: "error", message: "Failed to load files" });
         } finally {
             setLoading(false);
         }
     }
 
-    if (loading) return <div className="files-loading">Loading...</div>;
+    const filtered = useMemo(() => {
+        if (!query) return files;
+        const q = query.toLowerCase();
+        return files.filter((f) =>
+            [f.title, f.description, f.category, f.subcategory, f.username]
+                .join(" ")
+                .toLowerCase()
+                .includes(q)
+        );
+    }, [files, query]);
 
     return (
         <div className="files-page bw-theme">
-            <div className="files-header">
+            <header className="files-header">
                 <h2>Files</h2>
-                <button className="btn btn-primary">
-                    <a href="/upload" className="btn-text">
-                        Upload file
-                    </a>
-                </button>
 
-            </div>
+                <InputText
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search…"
+                    className="files-search"
+                />
 
-            {!files || files.length === 0 ? (
-                <div className="no-files">
-                    <div className="no-files-card">
-                        <h3>No files yet</h3>
-                        <p>Be the first to upload a document.</p>
-                        <a href="/upload" className="btn">
-                            Upload
-                        </a>
-                    </div>
+                <div className="files-count">
+                    {filtered.length} / {files.length}
                 </div>
+            </header>
+
+            {loading ? (
+                <div className="files-loading">
+                    <ProgressSpinner />
+                    <span>Please wait…</span>
+                </div>
+            ) : filtered.length === 0 ? (
+                <div className="no-files">No files found</div>
             ) : (
-                <div className="files-grid">{files.map((row, i) => <FileCard key={i} item={row} />)}</div>
+                <div className="files-grid">
+                    {filtered.map((row, i) => (
+                        <FileCard
+                            key={i}
+                            item={row}
+                            onOpen={(fileId, title) =>
+                                setPreview({ fileId, title })
+                            }
+                        />
+                    ))}
+                </div>
+            )}
+
+            <a href="/upload" className="upload-fab">
+                ⬆ Upload
+            </a>
+
+            {preview && (
+                <FilePreviewModal
+                    fileId={preview.fileId}
+                    title={preview.title}
+                    onClose={() => setPreview(null)}
+                />
+            )}
+
+            {toast && (
+                <ToastNotification
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
             )}
         </div>
     );

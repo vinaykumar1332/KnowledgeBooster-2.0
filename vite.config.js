@@ -1,6 +1,6 @@
 // vite.config.js
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
@@ -8,11 +8,19 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api/appsProxy": {
-        target: "https://script.google.com/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec",
+        target: "https://script.google.com",
         changeOrigin: true,
         secure: true,
-        rewrite: (path) => path.replace(/^\/api\/appsProxy/, '/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec')
-      }
-    }
-  }
-})
+        rewrite: () =>
+          "/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec",
+      },
+      "/api/FilesProxy": {
+        target: "https://script.google.com",
+        changeOrigin: true,
+        secure: true,
+        rewrite: () =>
+          "/macros/s/AKfycbyM5SPa85Og4JuUKsyJceBPDloelFGlUIrrbGw3Yw-Jte5GrUC8JnmF0ZN_9pgIXvSzuw/exec",
+      },
+    },
+  },
+});

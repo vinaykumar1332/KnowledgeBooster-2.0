@@ -27,8 +27,7 @@ export default async function handler(req, res) {
   }
 
   const SCRIPT_URLS = {
-    FILES: "https://script.google.com/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec",
-    AUTH: "https://script.google.com/macros/s/AKfycbzXhpMq9Jpn2dtQ57dxjdM9VCQqA7-4a5zc6gxJ8YXEIzGSt_8marYBfibzPs9UA2YD/exec"
+    FILES: "https://script.google.com/macros/s/AKfycbyM5SPa85Og4JuUKsyJceBPDloelFGlUIrrbGw3Yw-Jte5GrUC8JnmF0ZN_9pgIXvSzuw/exec"
   };
 
   const targetUrl = SCRIPT_URLS[scriptKey];

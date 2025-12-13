@@ -5,19 +5,17 @@ const API_CONFIG = {
     HEADERS: {
         "Content-Type": "application/json",
     },
-    USE_DIRECT: true, // for auth calls
+    USE_DIRECT: true,
 };
 
 const API_CONFIG_FILES = {
     FILES_URL:
-        "https://script.google.com/macros/s/AKfycbzXhpMq9Jpn2dtQ57dxjdM9VCQqA7-4a5zc6gxJ8YXEIzGSt_8marYBfibzPs9UA2YD/exec",
-    PROXY_URL: "/api/appsProxy",
+        "https://script.google.com/macros/s/AKfycbyM5SPa85Og4JuUKsyJceBPDloelFGlUIrrbGw3Yw-Jte5GrUC8JnmF0ZN_9pgIXvSzuw/exec",
+    PROXY_URL: "/api/FilesProxy",
     HEADERS: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET,POST,OPTIONS"
     },
-    USE_DIRECT_FILES: true, // toggle direct vs proxy for files endpoints
+    USE_DIRECT_FILES: false,
 };
 
 export { API_CONFIG, API_CONFIG_FILES };

@@ -1,0 +1,23 @@
+.preview-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--kh-black);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-header {
+    height: 52px;
+    padding: 0 16px;
+    background: var(--kh-black);
+    color: var(--kh-white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.preview-overlay iframe {
+    flex: 1;
+    width: 100%;
+}
