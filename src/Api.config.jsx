@@ -1,5 +1,7 @@
-const API_CONFIG = {
-    AUTH: "https://script.google.com/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec"
-}
-
-export default API_CONFIG;
+const API_CONFIG_FILES = {
+    PROXY_URL: "/api/appsProxy",
+    USE_DIRECT_FILES: false,
+    HEADERS: {
+        "Content-Type": "application/json",
+    },
+};
