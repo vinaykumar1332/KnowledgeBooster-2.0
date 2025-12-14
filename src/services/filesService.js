@@ -15,11 +15,10 @@ export async function saveFileMetadata(payload) {
       method: "POST",
       headers: API_CONFIG_FILES.HEADERS,
       body: JSON.stringify({
-        action: "save",
+        action: "save",          // ✅ REQUIRED
         ...payload,
       }),
     });
-
     return await safeParse(res);
   } catch (err) {
     return { ok: false, error: String(err) };
@@ -31,9 +30,10 @@ export async function fetchFiles() {
     const res = await fetch(API_CONFIG_FILES.PROXY_URL, {
       method: "POST",
       headers: API_CONFIG_FILES.HEADERS,
-      body: JSON.stringify({ action: "list" }),
+      body: JSON.stringify({
+        action: "list",          // ✅ REQUIRED
+      }),
     });
-
     return await safeParse(res);
   } catch (err) {
     return { ok: false, error: String(err) };
