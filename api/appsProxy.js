@@ -1,23 +1,29 @@
-// api/appsProxy.js
+import fetch from "node-fetch";
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
 
-  if (req.method === "OPTIONS") {
-    return res.status(204).end();
+  if (req.method === "OPTIONS") return res.status(204).end();
+
+  let body = {};
+
+  // ✅ FIX: manually parse JSON
+  if (req.method === "POST") {
+    try {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      body = JSON.parse(Buffer.concat(chunks).toString() || "{}");
+    } catch {
+      body = {};
+    }
   }
 
-  if (!["GET", "POST"].includes(req.method)) {
-    return res.status(405).json({ ok: false, msg: "Method not allowed" });
-  }
+  const script = body.script || req.query?.script;
+  const action = body.action || req.query?.action;
 
-  // accept script from body or query (useful for GET testing)
-  const incoming = req.body || {};
-  const script = incoming.script || req.query?.script;
-  const action = incoming.action || req.query?.action;
-  // other payload fields
-  const payload = { ...incoming };
+  const payload = { ...body };
   delete payload.script;
   delete payload.action;
 
@@ -26,47 +32,34 @@ export default async function handler(req, res) {
   };
 
   const targetUrl = SCRIPT_URLS[script];
+
   if (!targetUrl) {
-    console.error("Invalid script key:", script);
-    return res.status(400).json({ ok: false, msg: "Invalid script target", script });
+    return res.status(400).json({
+      ok: false,
+      msg: "Invalid script target",
+      receivedScript: script,
+    });
   }
 
   try {
-    const opts = {
-      method: req.method,
-      headers: {
-        "Content-Type": req.headers["content-type"] || "application/json",
-        ...(req.headers.authorization ? { Authorization: req.headers.authorization } : {})
-      },
-      redirect: "follow",
-    };
-
-    if (req.method === "POST") {
-      opts.body = JSON.stringify({ action, ...payload });
-    }
-
-    console.log("Proxy ->", targetUrl, "method:", opts.method);
-
-    const upstream = await fetch(targetUrl, opts);
-    console.log("Upstream status:", upstream.status, upstream.statusText);
-
-    // mirror upstream status and safe headers
-    res.status(upstream.status);
-    upstream.headers.forEach((v, k) => {
-      const lower = k.toLowerCase();
-      if (lower === "transfer-encoding") return;
-      res.setHeader(k, v);
+    const upstream = await fetch(targetUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, ...payload }),
     });
 
     const text = await upstream.text();
+
     try {
-      const json = JSON.parse(text);
-      return res.json(json);
+      return res.status(upstream.status).json(JSON.parse(text));
     } catch {
-      return res.send(text);
+      return res.status(upstream.status).send(text);
     }
   } catch (err) {
-    console.error("Proxy error:", err);
-    return res.status(500).json({ ok: false, msg: "Proxy error", error: String(err) });
+    return res.status(500).json({
+      ok: false,
+      msg: "Proxy error",
+      error: String(err),
+    });
   }
 }

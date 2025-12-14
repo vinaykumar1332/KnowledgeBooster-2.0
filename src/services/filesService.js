@@ -31,7 +31,7 @@ export async function fetchFiles() {
       method: "POST",
       headers: API_CONFIG_FILES.HEADERS,
       body: JSON.stringify({
-        action: "list",          // ✅ REQUIRED
+        action: "list",          
       }),
     });
     return await safeParse(res);
