@@ -14,7 +14,7 @@ export default defineConfig({
         rewrite: () =>
           "/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec",
       },
-      "/api/FilesProxy": {
+      "/api/filesProxy": {
         target: "https://script.google.com",
         changeOrigin: true,
         secure: true,

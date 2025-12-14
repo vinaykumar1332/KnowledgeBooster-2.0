@@ -1,22 +1,9 @@
-const API_CONFIG = {
-    AUTH_URL:
-        "https://script.google.com/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec",
+export const API_CONFIG = {
     PROXY_URL: "/api/appsProxy",
-    HEADERS: {
-        "Content-Type": "application/json",
-    },
-    USE_DIRECT: false,
+    HEADERS: { "Content-Type": "application/json" },
 };
 
-const API_CONFIG_FILES = {
-    FILES_URL:
-        "https://script.google.com/macros/s/AKfycbyM5SPa85Og4JuUKsyJceBPDloelFGlUIrrbGw3Yw-Jte5GrUC8JnmF0ZN_9pgIXvSzuw/exec",
-    PROXY_URL: "/api/FilesProxy",
-    HEADERS: {
-        "Content-Type": "application/json",
-    },
-    USE_DIRECT_FILES: false,
+export const API_CONFIG_FILES = {
+    PROXY_URL: "/api/filesProxy",
+    HEADERS: { "Content-Type": "application/json" },
 };
-
-export { API_CONFIG, API_CONFIG_FILES };
-export default API_CONFIG;

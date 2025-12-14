@@ -4,7 +4,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import ToastNotification from "../../components/toast/ToastNotification";
-import API_CONFIG from "../../config/Api.config";
+import { API_CONFIG } from "../../config/Api.config";
 import "./login.css";
 
 export default function Signup() {

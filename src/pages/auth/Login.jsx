@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import ToastNotification from "../../components/toast/ToastNotification";
-import API_CONFIG from "../../config/Api.config"; // your config (contains PROXY_URL etc)
+import { API_CONFIG } from "../../config/Api.config"; // your config (contains PROXY_URL etc)
 import "./login.css";
 
 export default function Login() {
