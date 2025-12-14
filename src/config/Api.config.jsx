@@ -4,6 +4,6 @@ export const API_CONFIG = {
 };
 
 export const API_CONFIG_FILES = {
-    PROXY_URL: "/api/filesProxy",
+    PROXY_URL: "/api/appsProxy",
     HEADERS: { "Content-Type": "application/json" },
 };
