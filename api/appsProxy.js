@@ -1,80 +1,72 @@
 // api/appsProxy.js
-import fetch from "node-fetch"; // REQUIRED for Vercel
-
 export default async function handler(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+
+  if (!["GET", "POST"].includes(req.method)) {
+    return res.status(405).json({ ok: false, msg: "Method not allowed" });
+  }
+
+  // accept script from body or query (useful for GET testing)
+  const incoming = req.body || {};
+  const script = incoming.script || req.query?.script;
+  const action = incoming.action || req.query?.action;
+  // other payload fields
+  const payload = { ...incoming };
+  delete payload.script;
+  delete payload.action;
+
+  const SCRIPT_URLS = {
+    AUTH: "https://script.google.com/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec",
+  };
+
+  const targetUrl = SCRIPT_URLS[script];
+  if (!targetUrl) {
+    console.error("Invalid script key:", script);
+    return res.status(400).json({ ok: false, msg: "Invalid script target", script });
+  }
+
   try {
-    // CORS
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-    if (req.method === "OPTIONS") {
-      return res.status(204).end();
-    }
-
-    if (req.method !== "POST") {
-      return res.status(405).json({ ok: false, msg: "Method not allowed" });
-    }
-
-    // Ensure body exists
-    const body = req.body || {};
-
-    const script = String(body.script || "").toUpperCase();
-    const action = body.action || "";
-
-    if (!script) {
-      return res.status(400).json({
-        ok: false,
-        msg: "Missing script key (AUTH / FILES)",
-        received: body,
-      });
-    }
-
-    const SCRIPT_URLS = {
-      AUTH: "https://script.google.com/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec",
-      FILES: "https://script.google.com/macros/s/AKfycbzXhpMq9Jpn2dtQ57dxjdM9VCQqA7-4a5zc6gxJ8YXEIzGSt_8marYBfibzPs9UA2YD/exec",
+    const opts = {
+      method: req.method,
+      headers: {
+        "Content-Type": req.headers["content-type"] || "application/json",
+        ...(req.headers.authorization ? { Authorization: req.headers.authorization } : {})
+      },
+      redirect: "follow",
     };
 
-    const targetUrl = SCRIPT_URLS[script];
-    if (!targetUrl) {
-      return res.status(400).json({
-        ok: false,
-        msg: "Invalid script key",
-        script,
-      });
+    if (req.method === "POST") {
+      opts.body = JSON.stringify({ action, ...payload });
     }
 
-    // Remove proxy-only keys
-    const upstreamPayload = { ...body };
-    delete upstreamPayload.script;
+    console.log("Proxy ->", targetUrl, "method:", opts.method);
 
-    const upstreamRes = await fetch(targetUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(upstreamPayload),
-      redirect: "follow",
+    const upstream = await fetch(targetUrl, opts);
+    console.log("Upstream status:", upstream.status, upstream.statusText);
+
+    // mirror upstream status and safe headers
+    res.status(upstream.status);
+    upstream.headers.forEach((v, k) => {
+      const lower = k.toLowerCase();
+      if (lower === "transfer-encoding") return;
+      res.setHeader(k, v);
     });
 
-    const text = await upstreamRes.text();
-
-    // Always respond JSON
+    const text = await upstream.text();
     try {
       const json = JSON.parse(text);
-      return res.status(upstreamRes.status).json(json);
+      return res.json(json);
     } catch {
-      return res.status(502).json({
-        ok: false,
-        msg: "Upstream returned non-JSON",
-        upstreamStatus: upstreamRes.status,
-        raw: text.slice(0, 3000),
-      });
+      return res.send(text);
     }
   } catch (err) {
-    console.error("appsProxy fatal error:", err);
-    return res.status(500).json({
-      ok: false,
-      msg: "Proxy crashed",
-      error: String(err),
-    });
+    console.error("Proxy error:", err);
+    return res.status(500).json({ ok: false, msg: "Proxy error", error: String(err) });
   }
 }

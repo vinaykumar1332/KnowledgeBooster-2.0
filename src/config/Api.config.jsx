@@ -5,7 +5,7 @@ const API_CONFIG = {
     HEADERS: {
         "Content-Type": "application/json",
     },
-    USE_DIRECT: true,
+    USE_DIRECT: false,
 };
 
 const API_CONFIG_FILES = {
