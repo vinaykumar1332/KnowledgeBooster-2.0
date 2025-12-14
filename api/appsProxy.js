@@ -1,5 +1,3 @@
-import fetch from "node-fetch";
-
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
@@ -9,7 +7,7 @@ export default async function handler(req, res) {
 
   let body = {};
 
-  // ✅ FIX: manually parse JSON
+  // ✅ Manual JSON parsing (required in serverless)
   if (req.method === "POST") {
     try {
       const chunks = [];
