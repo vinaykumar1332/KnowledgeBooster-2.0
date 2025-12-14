@@ -15,7 +15,6 @@ export default async function handler(req, res) {
     } catch {}
   }
 
-  // ✅ allow GET for health check / browser
   if (req.method === "GET") {
     return res.status(200).json({
       ok: true,

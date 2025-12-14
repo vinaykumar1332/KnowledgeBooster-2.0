@@ -15,7 +15,7 @@ export async function saveFileMetadata(payload) {
       method: "POST",
       headers: API_CONFIG_FILES.HEADERS,
       body: JSON.stringify({
-        action: "save",          // ✅ REQUIRED
+        action: "save",         
         ...payload,
       }),
     });
