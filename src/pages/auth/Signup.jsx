@@ -58,7 +58,7 @@ export default function Signup() {
         setLoading(true);
 
         try {
-            const res = await fetch(API_CONFIG.PROXY_URL, {
+            const res = await fetch(API_CONFIG.AUTH_URL, {
                 method: "POST",
                 headers: API_CONFIG.HEADERS,
                 body: JSON.stringify({

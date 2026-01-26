@@ -1,9 +1,11 @@
+// Central API config for both local and production (Vercel)
+// Always use these relative endpoints; serverless functions handle forwarding
 export const API_CONFIG = {
-    PROXY_URL: "/api/appsProxy",
+    AUTH_URL: "/api/auth",
     HEADERS: { "Content-Type": "application/json" },
 };
 
 export const API_CONFIG_FILES = {
-    PROXY_URL: "/api/filesProxy",
+    FILES_URL: "/api/files",
     HEADERS: { "Content-Type": "application/json" },
 };

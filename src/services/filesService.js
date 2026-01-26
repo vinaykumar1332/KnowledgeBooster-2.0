@@ -11,7 +11,7 @@ async function safeParse(res) {
 
 export async function saveFileMetadata(payload) {
   try {
-    const res = await fetch(API_CONFIG_FILES.PROXY_URL, {
+    const res = await fetch(API_CONFIG_FILES.FILES_URL, {
       method: "POST",
       headers: API_CONFIG_FILES.HEADERS,
       body: JSON.stringify({
@@ -27,7 +27,7 @@ export async function saveFileMetadata(payload) {
 
 export async function fetchFiles() {
   try {
-    const res = await fetch(API_CONFIG_FILES.PROXY_URL, {
+    const res = await fetch(API_CONFIG_FILES.FILES_URL, {
       method: "POST",
       headers: API_CONFIG_FILES.HEADERS,
       body: JSON.stringify({
