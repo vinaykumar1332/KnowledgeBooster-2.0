@@ -6,7 +6,11 @@ export default async function handler(req, res) {
 
   if (req.method === "OPTIONS") return res.status(204).end();
 
-  const FILES_URL = process.env.VITE_FILES_URL || process.env.FILES_URL;
+  // Try environment variables first, then fall back to hardcoded Google Apps Script URL
+  const FILES_URL = process.env.VITE_FILES_URL 
+    || process.env.FILES_URL 
+    || "https://script.google.com/macros/s/AKfycbyM5SPa85Og4JuUKsyJceBPDloelFGlUIrrbGw3Yw-Jte5GrUC8JnmF0ZN_9pgIXvSzuw/exec";
+  
   if (!FILES_URL) return res.status(500).json({ ok: false, msg: "FILES_URL not configured" });
 
   try {

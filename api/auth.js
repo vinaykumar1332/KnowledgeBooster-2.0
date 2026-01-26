@@ -6,7 +6,11 @@ export default async function handler(req, res) {
 
   if (req.method === "OPTIONS") return res.status(204).end();
 
-  const AUTH_URL = process.env.VITE_AUTH_URL || process.env.AUTH_URL;
+  // Try environment variables first, then fall back to hardcoded Google Apps Script URL
+  const AUTH_URL = process.env.VITE_AUTH_URL 
+    || process.env.AUTH_URL 
+    || "https://script.google.com/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec";
+  
   if (!AUTH_URL) return res.status(500).json({ ok: false, msg: "AUTH_URL not configured" });
 
   try {
