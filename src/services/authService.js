@@ -1,6 +1,8 @@
 // authService.js
+
 import { API_CONFIG } from "../config/Api.config";
 
+export async function login({ email, password }) {
   const payload = {
     action: "login",
     email: email.trim(),
