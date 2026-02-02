@@ -37,5 +37,10 @@ export function extractFileId(item) {
 
 export function buildDrivePreviewUrl(fileId) {
   if (!fileId) return "";
-  return `https://drive.google.com/file/d/${fileId}/preview`;
+  return `https://drive.google.com/file/d/${fileId}/preview?rm=minimal&embedded=true`;
+}
+
+export function buildDriveViewerUrl(fileId) {
+  if (!fileId) return "";
+  return `https://drive.google.com/file/d/${fileId}/view`;
 }

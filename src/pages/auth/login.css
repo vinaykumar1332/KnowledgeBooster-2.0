@@ -41,6 +41,17 @@ input {
     border: 1px solid var(--kh-border-10);
     font-family: var(--kh-font-body);
     line-height: 1.4;
+    background: var(--kh-surface);
+    color: var(--kh-text);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+.p-inputtext:focus,
+.p-password-input:focus {
+    border-color: var(--kh-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--kh-accent) 50%, var(--kh-bg) 50%);
+    outline: none;
 }
 
 .auth-card p,
@@ -70,7 +81,7 @@ input {
 }
 
 .auth-btn.primary:hover {
-    opacity: 0.85;
+    opacity: 0.9;
 }
 
 .auth-dropdown {
@@ -147,7 +158,7 @@ input {
 }
 
 .drop-down-sign-up {
-    margin-top: 20px;
+    margin-top: 70px;
 }
 
 @media (max-width: 768px) {

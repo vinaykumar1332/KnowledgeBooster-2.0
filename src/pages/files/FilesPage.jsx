@@ -37,6 +37,21 @@ export default function FilesPage() {
         if (fid) setFocusFileId(fid);
     }, [location.search]);
 
+    useEffect(() => {
+        if (focusFileId && query) {
+            setFocusFileId("");
+        }
+    }, [query, focusFileId]);
+
+    function shuffleArray(items) {
+        const arr = [...items];
+        for (let i = arr.length - 1; i > 0; i -= 1) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
     async function load() {
         setLoading(true);
         try {
@@ -61,7 +76,7 @@ export default function FilesPage() {
                     });
                     if (!seen.has(sig)) { seen.add(sig); unique.push(r); }
                 }
-                setFiles(unique);
+                setFiles(shuffleArray(unique));
                 setVisibleCount(Math.min(unique.length, 12));
                 setToast({ type: "success", message: "Files loaded successfully. Happy learning 📚" });
             }
@@ -104,10 +119,10 @@ export default function FilesPage() {
         const obs = new IntersectionObserver((entries) => {
             entries.forEach((e) => {
                 if (e.isIntersecting && !loading && !loadingMore) {
-                    if (visibleCount < titled.length) {
+                    if (visibleCount < dataset.length) {
                         setLoadingMore(true);
                         setTimeout(() => {
-                            setVisibleCount((c) => Math.min(c + 12, titled.length));
+                            setVisibleCount((c) => Math.min(c + 12, dataset.length));
                             setLoadingMore(false);
                         }, 150);
                     }
@@ -153,7 +168,10 @@ export default function FilesPage() {
                         name="titleFilter"
                         className="filter-select"
                         value={titleFilter}
-                        onChange={(e) => setTitleFilter(e.target.value)}
+                        onChange={(e) => {
+                            if (focusFileId) setFocusFileId("");
+                            setTitleFilter(e.target.value);
+                        }}
                         aria-label="Filter by title"
                     >
                         {titleOptions.map((t) => (

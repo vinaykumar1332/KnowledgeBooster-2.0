@@ -50,35 +50,37 @@ h3 {
     }
 }
 
-/* PRIMARY (Black background, white text) */
+/* PRIMARY (accent) */
 .btn-primary {
-    background: var(--kh-black, #000);
-    border: 1px solid var(--kh-black);
+    background: var(--kh-accent);
+    border: 1px solid var(--kh-accent);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+    transition: background 0.35s ease, color 0.35s ease;
+}
 
-    .btn-text {
-        color: var(--kh-white, #fff);
-    }
+.btn-primary .btn-text {
+    color: var(--kh-accent-contrast);
 }
 
 .landing-btn.primary:hover {
-    background: #111;
+    background: color-mix(in srgb, var(--kh-accent) 70%, var(--kh-bg) 30%);
     transform: translateY(-2px);
     box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
 }
 
 .btn-secondary {
-    background: var(--kh-white);
-    border: 1px solid var(--kh-black);
+    background: var(--kh-surface);
+    border: 1px solid var(--kh-border);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: background 0.35s ease, border-color 0.35s ease;
+}
 
-    .btn-text {
-        color: var(--kh-black);
-    }
+.btn-secondary .btn-text {
+    color: var(--kh-text);
 }
 
 .landing-btn.secondary:hover {
-    background: #f8f8f8;
+    background: var(--kh-surface-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
