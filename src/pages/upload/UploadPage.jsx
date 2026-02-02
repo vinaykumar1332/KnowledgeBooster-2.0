@@ -226,7 +226,7 @@ export default function UploadPage() {
                             className="btn btn-primary"
                             disabled={loading || !isDriveValid}
                         >
-                            {loading ? <><FiSave style={{marginRight:6}} /> Saving...</> : <><FiSave style={{marginRight:6}} /> Save</>}
+                            {loading ? <><FiSave style={{ marginRight: 6 }} /> Saving...</> : <><FiSave style={{ marginRight: 6 }} /> Save</>}
                         </button>
 
                         <button
@@ -234,7 +234,7 @@ export default function UploadPage() {
                             className="btn btn-secondary"
                             onClick={() => navigate("/files")}
                         >
-                            <FiX style={{marginRight:6}} /> Cancel
+                            <FiX style={{ marginRight: 6 }} /> Cancel
                         </button>
                     </div>
 

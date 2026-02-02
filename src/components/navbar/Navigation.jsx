@@ -22,6 +22,8 @@ export default function Navigation({
             : "light";
     };
     const [theme, setTheme] = useState(getInitialTheme);
+    const [isAnimatingIcon, setIsAnimatingIcon] = useState(false);
+    const animationTimer = useRef(null);
 
     // local state for name/email (fallback to sessionStorage)
     const [userName, setUserName] = useState(initialUserName);
@@ -70,6 +72,12 @@ export default function Navigation({
         const onKey = (e) => e.key === "Escape" && (setDrawerOpen(false), setProfileOpen(false));
         document.addEventListener("keydown", onKey);
         return () => document.removeEventListener("keydown", onKey);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (animationTimer.current) clearTimeout(animationTimer.current);
+        };
     }, []);
 
     // Ensure navigation closes overlays and logs for debug
@@ -147,9 +155,16 @@ export default function Navigation({
 
                     <div className="kh-profile-wrap" ref={profileRef}>
                         <button
-                            className="kh-theme-toggle"
+                            className={`kh-theme-toggle ${isAnimatingIcon ? "animate" : ""}`.trim()}
                             type="button"
-                            onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+                            onClick={() => {
+                                setIsAnimatingIcon(true);
+                                setTheme((t) => (t === "dark" ? "light" : "dark"));
+                                if (animationTimer.current) clearTimeout(animationTimer.current);
+                                animationTimer.current = setTimeout(() => {
+                                    setIsAnimatingIcon(false);
+                                }, 380);
+                            }}
                             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
                             title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
                         >

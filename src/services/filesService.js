@@ -25,13 +25,15 @@ export async function saveFileMetadata(payload) {
   }
 }
 
-export async function fetchFiles() {
+export async function fetchFiles({ offset = 0, limit = 0 } = {}) {
   try {
     const res = await fetch(API_CONFIG_FILES.FILES_URL, {
       method: "POST",
       headers: API_CONFIG_FILES.HEADERS,
       body: JSON.stringify({
-        action: "list",          
+        action: "list",
+        offset,
+        limit,
       }),
     });
     return await safeParse(res);

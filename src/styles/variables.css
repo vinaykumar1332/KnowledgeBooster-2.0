@@ -28,7 +28,7 @@
     --kh-font-weight-bold: 700;
 
     /* Spacing tokens */
-    --kh-radius: 12px;
+    --kh-radius: 0px;
     --kh-space: 16px;
 
     /* Back-compat tokens */

@@ -8,6 +8,7 @@
     top: 0;
     z-index: 60;
     backdrop-filter: blur(4px);
+    transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
 .kh-header-inner {
@@ -34,7 +35,7 @@
     justify-content: center;
     width: 44px;
     height: 44px;
-    border-radius: 10px;
+    border-radius: 0;
     background: transparent;
     border: 1px solid var(--kh-border);
     cursor: pointer;
@@ -57,7 +58,7 @@
     height: 2px;
     background: var(--kh-text);
     margin: 3px 0;
-    border-radius: 2px;
+    border-radius: 0;
     transition: transform .22s ease, opacity .18s ease;
 }
 
@@ -107,7 +108,8 @@
     font-size: 11px;
     color: var(--kh-text-muted);
     margin-top: 2px;
-    display: block;
+    display: none;
+
 }
 
 /* Center nav (desktop) */
@@ -129,7 +131,7 @@
     background: transparent;
     border: none;
     padding: 8px 6px;
-    border-radius: 8px;
+    border-radius: 0;
     font-family: var(--kh-font-display);
     font-size: 15px;
     cursor: pointer;
@@ -173,7 +175,7 @@
     gap: 6px;
     border: 1px solid var(--kh-border);
     padding: 6px 8px;
-    border-radius: 999px;
+    border-radius: 0;
     font-family: var(--kh-font-body);
     font-size: 12px;
     color: var(--kh-text);
@@ -189,7 +191,7 @@
 .kh-avatar {
     width: 40px;
     height: 40px;
-    border-radius: 999px;
+    border-radius: 0;
     background: var(--kh-text);
     color: var(--kh-bg);
     display: grid;
@@ -201,6 +203,9 @@
 /* Profile menu */
 .kh-profile-wrap {
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .kh-profile-menu {
@@ -210,7 +215,7 @@
     width: 220px;
     background: var(--kh-surface);
     border: 1px solid var(--kh-border);
-    border-radius: 10px;
+    border-radius: 0;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     opacity: 0;
     transform: translateY(-8px) scale(.98);
@@ -258,7 +263,7 @@
 .kh-theme-toggle {
     width: 40px;
     height: 40px;
-    border-radius: 10px;
+    border-radius: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -268,11 +273,43 @@
     cursor: pointer;
     transition: transform .12s ease, background .12s ease;
     margin-right: 8px;
+    overflow: hidden;
 }
 
 .kh-theme-toggle:hover {
     transform: translateY(-2px);
     background: rgba(0, 0, 0, 0.03);
+}
+
+.kh-theme-toggle svg {
+    display: block;
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+.kh-theme-toggle.animate svg {
+    animation: kh-theme-icon-slide 0.4s ease-in-out;
+}
+
+@keyframes kh-theme-icon-slide {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    30% {
+        transform: translateY(-10px) scale(1.05);
+        opacity: 0;
+    }
+
+    31% {
+        transform: translateY(12px) scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .kh-profile-actions {
@@ -290,7 +327,7 @@
     border: none;
     padding: 10px;
     text-align: left;
-    border-radius: 8px;
+    border-radius: 0;
     cursor: pointer;
     font-family: var(--kh-font-body);
     color: var(--kh-text);
@@ -387,7 +424,7 @@
     justify-content: space-between;
     gap: 10px;
     padding: 12px;
-    border-radius: 10px;
+    border-radius: 0;
     background: transparent;
     border: 1px solid transparent;
     cursor: pointer;
@@ -438,7 +475,7 @@
 /* logout */
 .kh-logout {
     padding: 8px 12px;
-    border-radius: 8px;
+    border-radius: 0;
     border: 1px solid var(--kh-border);
     background: transparent;
     cursor: pointer;

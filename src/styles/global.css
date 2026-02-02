@@ -25,6 +25,7 @@ body {
     margin-right: 0px;
     background: var(--kh-bg);
     color: var(--kh-text);
+    transition: background 0.35s ease, color 0.35s ease;
 }
 
 h1,

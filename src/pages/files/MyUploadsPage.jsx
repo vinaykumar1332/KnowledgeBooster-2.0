@@ -1,6 +1,5 @@
-// src/pages/files/FilesPage.jsx
+// src/pages/files/MyUploadsPage.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { fetchFiles } from "../../services/filesService";
 import FileCard from "../../components/cards/FileCard";
 import FilePreviewModal from "../../components/preview/FilePreviewModal";
@@ -10,10 +9,10 @@ import { InputText } from "primereact/inputtext";
 import { FiSearch, FiFilter, FiInbox } from "react-icons/fi";
 import "./FilesPage.css";
 
-export default function FilesPage() {
-    const location = useLocation();
-    const [files, setFiles] = useState([]); // full dataset
-    const [visibleCount, setVisibleCount] = useState(0); // how many rendered
+export default function MyUploadsPage() {
+    const [allFiles, setAllFiles] = useState([]);
+    const [files, setFiles] = useState([]);
+    const [visibleCount, setVisibleCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [query, setQuery] = useState("");
@@ -22,20 +21,12 @@ export default function FilesPage() {
     const [toast, setToast] = useState(null);
     const sentinelRef = useRef(null);
 
+    const norm = (v) => String(v ?? "").trim().replace(/\s+/g, " ").toLowerCase();
+
     useEffect(() => {
         load();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    // Initialize filters from URL params (title or fileId)
-    const [focusFileId, setFocusFileId] = useState("");
-    useEffect(() => {
-        const sp = new URLSearchParams(location.search);
-        const t = sp.get("title");
-        const fid = sp.get("fileId");
-        if (t) setTitleFilter(t);
-        if (fid) setFocusFileId(fid);
-    }, [location.search]);
 
     async function load() {
         setLoading(true);
@@ -43,8 +34,7 @@ export default function FilesPage() {
             const res = await fetchFiles({ offset: 0, limit: 0 });
             if (res.ok && Array.isArray(res.rows)) {
                 const rows = res.rows.slice().reverse();
-                // Deduplicate entries where all fields except timestamp are identical
-                const norm = (v) => String(v ?? "").trim().replace(/\s+/g, " ").toLowerCase();
+                // Deduplicate globally
                 const seen = new Set();
                 const unique = [];
                 for (const r of rows) {
@@ -61,12 +51,21 @@ export default function FilesPage() {
                     });
                     if (!seen.has(sig)) { seen.add(sig); unique.push(r); }
                 }
-                setFiles(unique);
-                setVisibleCount(Math.min(unique.length, 12));
-                setToast({ type: "success", message: "Files loaded successfully. Happy learning 📚" });
+                setAllFiles(unique);
+
+                // Current user
+                let current = null;
+                try { current = JSON.parse(sessionStorage.getItem("auth") || "null"); } catch (_) { }
+                const meName = norm(current?.username || "");
+                const meEmail = norm(current?.email || "");
+
+                const mine = unique.filter((r) => norm(r.username) === meName && norm(r.email) === meEmail);
+                setFiles(mine);
+                setVisibleCount(Math.min(mine.length, 12));
+                setToast({ type: "success", message: "Loaded My Uploads" });
             }
         } catch {
-            setToast({ type: "error", message: "Failed to load files" });
+            setToast({ type: "error", message: "Failed to load uploads" });
         } finally {
             setLoading(false);
         }
@@ -83,20 +82,12 @@ export default function FilesPage() {
         );
     }, [files, query]);
 
-    const focused = useMemo(() => {
-        if (!focusFileId) return null;
-        return files.filter((f) => String(f.fileid) === String(focusFileId));
-    }, [files, focusFileId]);
-
-    const dataset = useMemo(() => {
-        if (focused && focused.length) return focused;
+    const titled = useMemo(() => {
         if (titleFilter === "all") return filtered;
         return filtered.filter((f) => f.title === titleFilter);
-    }, [focused, filtered, titleFilter]);
+    }, [filtered, titleFilter]);
 
-    const visibleItems = useMemo(() => {
-        return dataset.slice(0, visibleCount);
-    }, [dataset, visibleCount]);
+    const visibleItems = useMemo(() => titled.slice(0, visibleCount), [titled, visibleCount]);
 
     useEffect(() => {
         const el = sentinelRef.current;
@@ -116,40 +107,37 @@ export default function FilesPage() {
         }, { rootMargin: "200px" });
         obs.observe(el);
         return () => obs.disconnect();
-    }, [dataset.length, loading, loadingMore, visibleCount]);
+    }, [titled.length, loading, loadingMore, visibleCount]);
 
-    // Reset visible chunk when filters or search change
     useEffect(() => {
-        setVisibleCount(Math.min(12, dataset.length));
-    }, [dataset.length]);
+        setVisibleCount(Math.min(12, titled.length));
+    }, [titled.length]);
 
     const titleOptions = useMemo(() => {
-        const s = new Set(files.map((f) => f.title).filter(Boolean));
+        const s = new Set(allFiles.map((f) => f.title).filter(Boolean));
         return ["all", ...Array.from(s)];
-    }, [files]);
+    }, [allFiles]);
 
     return (
         <div className="files-page bw-theme">
             <header className="files-header">
-                <h2>Files</h2>
-
+                <h2>My Uploads</h2>
                 <div className="search-wrap">
                     <FiSearch className="search-icon" />
                     <InputText
-                        id="files-search"
+                        id="myuploads-search"
                         name="search"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search…"
                         className="files-search"
-                        aria-label="Search files"
+                        aria-label="Search my uploads"
                     />
                 </div>
-
                 <div className="filter-wrap">
                     <FiFilter className="filter-icon" />
                     <select
-                        id="files-title-filter"
+                        id="myuploads-title-filter"
                         name="titleFilter"
                         className="filter-select"
                         value={titleFilter}
@@ -161,31 +149,24 @@ export default function FilesPage() {
                         ))}
                     </select>
                 </div>
-
-                <div className="files-count">
-                    Showing {visibleItems.length} results
-                </div>
+                <div className="files-count">{titled.length} / {files.length}</div>
             </header>
 
             {loading ? (
                 <div className="files-loading">
-                    <ProgressSpinner className="files-spinner" />
-                    <span className="files-loading-text">Please wait…</span>
+                    <ProgressSpinner />
+                    <span>Please wait…</span>
                 </div>
-            ) : dataset.length === 0 ? (
+            ) : titled.length === 0 ? (
                 <div className="empty-state">
                     <FiInbox className="empty-icon" />
-                    <h3>No files match your search</h3>
-                    <p>Try clearing filters or searching a different term.</p>
+                    <h3>No uploads found</h3>
+                    <p>Try adjusting search or filters.</p>
                 </div>
             ) : (
                 <div className="files-grid">
                     {visibleItems.map((row, i) => (
-                        <FileCard
-                            key={i}
-                            item={row}
-                            onOpen={(fileId, title) => setPreview({ fileId, title })}
-                        />
+                        <FileCard key={i} item={row} onOpen={(fileId, title) => setPreview({ fileId, title })} />
                     ))}
                     {loadingMore && (
                         Array.from({ length: 4 }).map((_, idx) => (
@@ -202,22 +183,12 @@ export default function FilesPage() {
                 </div>
             )}
 
-            <a href="/upload" className="upload-fab">⬆ Upload</a>
-
             {preview && (
-                <FilePreviewModal
-                    fileId={preview.fileId}
-                    title={preview.title}
-                    onClose={() => setPreview(null)}
-                />
+                <FilePreviewModal fileId={preview.fileId} title={preview.title} onClose={() => setPreview(null)} />
             )}
 
             {toast && (
-                <ToastNotification
-                    message={toast.message}
-                    type={toast.type}
-                    onClose={() => setToast(null)}
-                />
+                <ToastNotification message={toast.message} type={toast.type} onClose={() => setToast(null)} />
             )}
         </div>
     );

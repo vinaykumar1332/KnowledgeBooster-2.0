@@ -10,6 +10,8 @@ import HomePage from "./pages/Home/home";
 
 import UploadPage from "./pages/upload/UploadPage";
 import FilesPage from "./pages/files/FilesPage";
+import MyUploadsPage from "./pages/files/MyUploadsPage";
+import Profile from "./pages/profile/Profile";
 
 // Protected = requires auth
 function ProtectedRoute({ children }) {
@@ -86,6 +88,15 @@ function AppRoutes() {
         />
 
         <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/upload"
           element={
             <ProtectedRoute>
@@ -99,6 +110,15 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <FilesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/my-uploads"
+          element={
+            <ProtectedRoute>
+              <MyUploadsPage />
             </ProtectedRoute>
           }
         />
