@@ -1,7 +1,103 @@
-/* UploadPage.css - black & white theme */
+/* Dropdown and custom subcategory styles */
+.upload-dropdown-wrap {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.upload-dropdown {
+    width: 100%;
+    padding: 10px 36px 10px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--kh-border);
+    background: var(--kh-surface);
+    color: var(--kh-text);
+    appearance: none;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.upload-dropdown-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--kh-text-muted);
+    font-size: 1.2em;
+}
+
+.custom-sub-wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin: 8px 0 14px 0;
+}
+
+.custom-sub-input {
+    border-radius: 0;
+    margin-bottom: 10px;
+}
+
+.custom-sub-btn-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 2px;
+}
+
+.custom-sub-input {
+    flex: 1;
+    padding: 9px 10px;
+    border-radius: 6px;
+    border: 1.5px solid var(--kh-accent);
+    background: var(--kh-surface);
+    color: var(--kh-text);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1rem;
+    border-radius: 0;
+    padding: 8px 14px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background .13s, color .13s;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: var(--kh-accent);
+    color: var(--kh-accent-contrast);
+    border-radius: 0;
+}
+
+.btn-primary:hover {
+    background: var(--kh-accent-contrast);
+    color: var(--kh-accent);
+    border: 1.5px solid var(--kh-accent);
+}
+
+.btn-secondary {
+    background: var(--kh-surface-hover);
+    color: var(--kh-text);
+    border: 1.5px solid var(--kh-border);
+    border-radius: 0;
+}
+
+.btn-secondary:hover {
+    background: var(--kh-border);
+    color: var(--kh-accent);
+}
+
+/* UploadPage.css - theme tokens */
 .bw-theme {
-    background: #fff;
-    color: #111;
+    background: var(--kh-bg);
+    color: var(--kh-text);
     padding: 24px;
     min-height: 80vh;
 }
@@ -9,14 +105,17 @@
 .upload-card {
     max-width: 700px;
     margin: 24px auto;
-    border: 1px solid #ddd;
+    border: 1px solid var(--kh-border);
     padding: 20px;
     border-radius: 10px;
+    background: var(--kh-surface);
+    box-sizing: border-box;
 }
 
 .upload-card h2 {
     margin: 0 0 12px;
     font-size: 22px;
+    color: var(--kh-text);
 }
 
 .upload-form label {
@@ -30,11 +129,14 @@
 .upload-form select {
     width: 100%;
     padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    border-radius: 0;
+    border: 1px solid var(--kh-border);
     margin-top: 6px;
-    background: #fff;
-    color: #111;
+    margin-bottom: 10px;
+    background: var(--kh-surface);
+    color: var(--kh-text);
+    box-sizing: border-box;
+    display: block;
 }
 
 .upload-form textarea {
@@ -47,6 +149,9 @@
     gap: 12px;
     margin-top: 14px;
     width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 
@@ -58,20 +163,28 @@
 }
 
 .msg.error {
-    background: #fee;
-    color: #900;
-    border: 1px solid #f99;
+    background: var(--kh-danger-bg);
+    color: var(--kh-danger-text);
+    border: 1px solid var(--kh-danger-border);
 }
 
 .msg.success {
-    background: #efe;
-    color: #060;
-    border: 1px solid #9f9;
+    background: var(--kh-success-bg);
+    color: var(--kh-success-text);
+    border: 1px solid var(--kh-success-border);
 }
 
 @media (max-width:600px) {
     .upload-card {
-        padding: 12px;
-        margin: 12px;
+        padding: 10px 4vw;
+        margin: 10px 0;
+        box-sizing: border-box;
+    }
+
+    .upload-form input,
+    .upload-form textarea,
+    .upload-form select {
+        font-size: 1rem;
+        padding: 9px;
     }
 }

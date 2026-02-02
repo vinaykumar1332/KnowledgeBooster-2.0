@@ -5,10 +5,12 @@ import { saveFileMetadata } from "../../services/filesService";
 import { extractDriveFileId, buildDrivePreviewUrl } from "../../utils/drive";
 import "./UploadPage.css";
 
+import { FiSave, FiX, FiChevronDown } from "react-icons/fi";
+
 const categories = {
-    student: ["Notes", "Assignments", "Projects"],
-    professional: ["Reports", "Whitepapers", "Case Studies"],
-    others: ["Misc"],
+    student: ["Notes", "Assignments", "Projects", "Lab Work", "Syllabus", "Other"],
+    professional: ["Reports", "Whitepapers", "Case Studies", "Presentations", "Research", "Other"],
+    others: ["Misc", "Other"],
 };
 
 export default function UploadPage() {
@@ -18,10 +20,12 @@ export default function UploadPage() {
     const [form, setForm] = useState({
         category: "student",
         subcategory: "Notes",
+        customSubcategory: "",
         title: "",
         description: "",
         driveUrl: "",
     });
+    const [showCustomSub, setShowCustomSub] = useState(false);
 
     const [loading, setLoading] = useState(false);
     const [msg, setMsg] = useState(null);
@@ -42,11 +46,30 @@ export default function UploadPage() {
         setForm((f) => ({
             ...f,
             subcategory: categories[f.category][0] || "",
+            customSubcategory: "",
         }));
+        setShowCustomSub(false);
     }, [form.category]);
 
-    const handleChange = (key, value) =>
+    const handleChange = (key, value) => {
         setForm((f) => ({ ...f, [key]: value }));
+        if (key === "subcategory" && value === "Other") {
+            setShowCustomSub(true);
+        } else if (key === "subcategory") {
+            setShowCustomSub(false);
+        }
+    };
+
+    const handleCustomSubSave = () => {
+        if (form.customSubcategory.trim()) {
+            setForm((f) => ({ ...f, subcategory: f.customSubcategory.trim() }));
+            setShowCustomSub(false);
+        }
+    };
+    const handleCustomSubCancel = () => {
+        setForm((f) => ({ ...f, customSubcategory: "", subcategory: categories[form.category][0] || "" }));
+        setShowCustomSub(false);
+    };
 
     // 🔍 Drive validation + preview
     const fileId = useMemo(
@@ -123,15 +146,40 @@ export default function UploadPage() {
                         <option value="others">Others</option>
                     </select>
 
+
                     <label>Subcategory</label>
-                    <select
-                        value={form.subcategory}
-                        onChange={(e) => handleChange("subcategory", e.target.value)}
-                    >
-                        {categories[form.category].map((s) => (
-                            <option key={s} value={s}>{s}</option>
-                        ))}
-                    </select>
+                    <div className="upload-dropdown-wrap">
+                        <select
+                            value={form.subcategory}
+                            onChange={(e) => handleChange("subcategory", e.target.value)}
+                            className="upload-dropdown"
+                        >
+                            {categories[form.category].map((s) => (
+                                <option key={s} value={s}>{s}</option>
+                            ))}
+                        </select>
+                        <FiChevronDown className="upload-dropdown-icon" />
+                    </div>
+                    {showCustomSub && (
+                        <div className="custom-sub-wrap">
+                            <input
+                                type="text"
+                                placeholder="Enter subcategory"
+                                value={form.customSubcategory}
+                                onChange={e => setForm(f => ({ ...f, customSubcategory: e.target.value }))}
+                                className="custom-sub-input"
+                                autoFocus
+                            />
+                            <div className="custom-sub-btn-row">
+                                <button type="button" className="btn btn-primary" onClick={handleCustomSubSave} title="Save">
+                                    <FiSave /> Save
+                                </button>
+                                <button type="button" className="btn btn-secondary" onClick={handleCustomSubCancel} title="Cancel">
+                                    <FiX /> Cancel
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
                     <label>Title</label>
                     <input
@@ -175,18 +223,18 @@ export default function UploadPage() {
                     <div className="submit-row">
                         <button
                             type="submit"
-                            className="btn"
+                            className="btn btn-primary"
                             disabled={loading || !isDriveValid}
                         >
-                            {loading ? "Saving..." : "Save"}
+                            {loading ? <><FiSave style={{marginRight:6}} /> Saving...</> : <><FiSave style={{marginRight:6}} /> Save</>}
                         </button>
 
                         <button
                             type="button"
-                            className="btn alt"
+                            className="btn btn-secondary"
                             onClick={() => navigate("/files")}
                         >
-                            Cancel
+                            <FiX style={{marginRight:6}} /> Cancel
                         </button>
                     </div>
 

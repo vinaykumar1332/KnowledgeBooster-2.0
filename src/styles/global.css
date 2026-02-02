@@ -1,13 +1,4 @@
-/* In your global CSS file (e.g., globals.css or styles.css) */
-:root {
-    --kh-black: #000;
-    --kh-white: #fff;
-    --kh-border-10: rgba(0, 0, 0, 0.10);
-    --kh-radius: 12px;
-    --kh-space: 16px;
-    --kh-font-display: "Science Gothic", "Playfair Display", serif;
-    --kh-font-body: "Science Gothic", "Playfair Display", serif;
-}
+@import "./variables.css";
 
 @font-face {
     font-family: "Science Gothic";
@@ -27,18 +18,20 @@
 
 /* How to apply it to elements */
 body {
-    font-family: 'Science Gothic', sans-serif;
-    font-weight: 400;
+    font-family: var(--kh-font-body);
+    font-weight: var(--kh-font-weight-regular);
     margin-top: 0px;
     margin-left: 0px;
     margin-right: 0px;
+    background: var(--kh-bg);
+    color: var(--kh-text);
 }
 
 h1,
 h2,
 h3 {
-    font-family: 'Science Gothic', sans-serif;
-    font-weight: 700;
+    font-family: var(--kh-font-display);
+    font-weight: var(--kh-font-weight-bold);
 }
 
 

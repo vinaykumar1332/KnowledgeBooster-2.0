@@ -6,7 +6,7 @@
 /* Landing Page – Global Layout */
 .landing-wrapper {
     min-height: 100vh;
-    background: var(--kh-white, #ffffff);
+    background: var(--kh-bg);
     padding-top: 120px;
     padding-bottom: 80px;
     display: flex;
@@ -25,14 +25,14 @@
     font-family: var(--kh-font-display, "Science Gothic", serif);
     font-size: 48px;
     font-weight: 800;
-    color: var(--kh-black, #000);
+    color: var(--kh-text);
     margin-bottom: 16px;
     letter-spacing: -0.5px;
 }
 
 .landing-title span {
-    background: var(--kh-black);
-    color: var(--kh-white);
+    background: var(--kh-accent);
+    color: var(--kh-accent-contrast);
     padding: 4px 12px;
     border-radius: 6px;
 }
@@ -42,7 +42,7 @@
     font-family: var(--kh-font-body, "Inter", sans-serif);
     font-size: 20px;
     line-height: 1.5;
-    color: #444;
+    color: var(--kh-text-muted);
     margin-bottom: 42px;
 }
 

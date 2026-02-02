@@ -92,17 +92,17 @@ export default function Login() {
                         </div>
 
                         <button type="submit" className="btn-primary btn" disabled={loading}>
-                            <a href="#!" className="btn-text" onClick={(e) => e.preventDefault()}>
-                                {loading ? "Signing in..." : "Login"}
-                            </a>
+                            <span className="btn-text">{loading ? "Signing in..." : "Login"}</span>
                         </button>
 
                         <div className="auth-foot">
                             New here?
-                            <button className="btn-secondary btn">
-                                <a href="/signup" className="btn-text">
-                                    Sign UP
-                                </a>
+                            <button
+                                type="button"
+                                className="btn-secondary btn"
+                                onClick={() => navigate("/signup")}
+                            >
+                                <span className="btn-text">Sign UP</span>
                             </button>
                         </div>
                     </form>

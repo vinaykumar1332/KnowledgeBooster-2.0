@@ -42,6 +42,8 @@ export default function Signup() {
         form.userType &&
         allValid;
 
+    const showFieldError = (field) => touched[field];
+
     const showToast = (message, type = "error") => {
         setToast({ message, type });
         setTimeout(() => setToast(null), 5000);
@@ -121,8 +123,8 @@ export default function Signup() {
                                 className={`w-full ${touched.username && !form.username.trim() ? "p-invalid" : ""}`}
                                 required
                             />
-                            {touched.username && !form.username.trim() && (
-                                <small className="p-error">Name is required</small>
+                            {showFieldError("username") && !form.username.trim() && (
+                                <small className="p-error">Full name is required</small>
                             )}
                         </div>
 
@@ -138,8 +140,8 @@ export default function Signup() {
                                 className={`w-full ${touched.email && !form.email.includes("@") ? "p-invalid" : ""}`}
                                 required
                             />
-                            {touched.email && !form.email.includes("@") && (
-                                <small className="p-error">Valid email required</small>
+                            {showFieldError("email") && !form.email.includes("@") && (
+                                <small className="p-error">Valid email is required</small>
                             )}
                         </div>
 
@@ -156,6 +158,10 @@ export default function Signup() {
                                 className="w-full"
                             />
 
+                            {showFieldError("password") && !allValid && (
+                                <small className="p-error">Password does not meet requirements</small>
+                            )}
+
                             {/* Show rules only when user types password & it's invalid */}
                             <div className={`password-rules mt-3 transition-all duration-300 ${showPasswordRules ? "opacity-100 max-h-96" : "opacity-0 max-h-0 overflow-hidden"}`}>
                                 {passwordRules.map((rule, i) => (
@@ -171,17 +177,21 @@ export default function Signup() {
                         </div>
 
                         {/* User Type Dropdown - Fixed: no layout shift */}
-                        <div className="field">
+                        <div className="field auth-dropdown-field">
                             <label> I am a</label>
                             <Dropdown
                                 value={form.userType}
                                 options={userTypes}
                                 onChange={(e) => setForm({ ...form, userType: e.value })}
+                                onBlur={() => setTouched({ ...touched, userType: true })}
                                 placeholder="Select your role"
                                 className="w-full"
                                 panelClassName="z-50" // Ensures dropdown floats above everything
                                 required
                             />
+                            {showFieldError("userType") && !form.userType && (
+                                <small className="p-error">User type is required</small>
+                            )}
                         </div>
 
                         {/* Submit Button - Clean & Consistent */}

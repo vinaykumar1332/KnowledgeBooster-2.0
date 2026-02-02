@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { FiMoon, FiSun, FiMenu, FiX, FiUpload, FiHome, FiFileText, FiLogOut, FiUser } from "react-icons/fi";
 import "./Navigation.css";
 
 export default function Navigation({
@@ -11,6 +12,16 @@ export default function Navigation({
 }) {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
+    const getInitialTheme = () => {
+        try {
+            const stored = localStorage.getItem("theme");
+            if (stored === "light" || stored === "dark") return stored;
+        } catch (_) { }
+        return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+    };
+    const [theme, setTheme] = useState(getInitialTheme);
 
     // local state for name/email (fallback to sessionStorage)
     const [userName, setUserName] = useState(initialUserName);
@@ -36,6 +47,13 @@ export default function Navigation({
             setUserEmail(initialUserEmail);
         }
     }, [initialUserName, initialUserEmail]);
+
+    useEffect(() => {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("theme", theme);
+        } catch (_) { }
+    }, [theme]);
 
     // close overlays on outside click
     useEffect(() => {
@@ -93,10 +111,9 @@ export default function Navigation({
                             onClick={() => setDrawerOpen((v) => !v)}
                             aria-label="Toggle menu"
                             type="button"
+                            style={{ color: 'var(--kh-text)' }}
                         >
-                            <span className="kh-ham-line" />
-                            <span className="kh-ham-line" />
-                            <span className="kh-ham-line" />
+                            {drawerOpen ? <FiX size={28} color="var(--kh-text)" /> : <FiMenu size={28} color="var(--kh-text)" />}
                         </button>
 
                         <div className="kh-logo" onClick={() => handleNavigate("/home")} role="button" tabIndex={0}>
@@ -129,6 +146,16 @@ export default function Navigation({
                     </nav>
 
                     <div className="kh-profile-wrap" ref={profileRef}>
+                        <button
+                            className="kh-theme-toggle"
+                            type="button"
+                            onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+                            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                        >
+                            {theme === "dark" ? <FiSun /> : <FiMoon />}
+                        </button>
+
                         <button className="kh-avatar-btn" onClick={() => setProfileOpen((v) => !v)} type="button">
                             <div className="kh-avatar">{initialsFromName(userName)}</div>
                         </button>
@@ -143,9 +170,9 @@ export default function Navigation({
                             </div>
 
                             <ul className="kh-profile-actions">
-                                <li><button type="button" onClick={() => handleNavigate("/profile")}>Profile</button></li>
-                                <li><button type="button" onClick={() => handleNavigate("/my-uploads")}>My Uploads</button></li>
-                                <li><button type="button" onClick={handleLogout}>Logout</button></li>
+                                <li><button type="button" onClick={() => handleNavigate("/profile")} style={{ color: 'var(--kh-text)', display: 'flex', alignItems: 'center', gap: 8 }}><FiUser style={{ color: 'var(--kh-text)' }} /> Profile</button></li>
+                                <li><button type="button" onClick={() => handleNavigate("/my-uploads")} style={{ color: 'var(--kh-text)', display: 'flex', alignItems: 'center', gap: 8 }}><FiUpload style={{ color: 'var(--kh-text)' }} /> My Uploads</button></li>
+                                <li><button type="button" onClick={handleLogout} style={{ color: 'var(--kh-text)', display: 'flex', alignItems: 'center', gap: 8 }}><FiLogOut style={{ color: 'var(--kh-text)' }} /> Sign Out</button></li>
                             </ul>
                         </div>
                     </div>
@@ -166,15 +193,15 @@ export default function Navigation({
                 </div>
 
                 <ul className="kh-drawer-list">
-                    <li><button className="kh-drawer-item" type="button" onClick={() => handleNavigate("/home")}>Home</button></li>
-                    <li><button className="kh-drawer-item" type="button" onClick={() => handleNavigate("/upload")}>Upload</button></li>
-                    <li><button className="kh-drawer-item" type="button" onClick={() => handleNavigate("/files")}>Files</button></li>
+                    <li><button className="kh-drawer-item" type="button" onClick={() => handleNavigate("/home")} style={{ color: 'var(--kh-text)', display: 'flex', alignItems: 'center', gap: 8 }}><FiHome style={{ color: 'var(--kh-text)' }} /> Home</button></li>
+                    <li><button className="kh-drawer-item" type="button" onClick={() => handleNavigate("/upload")} style={{ color: 'var(--kh-text)', display: 'flex', alignItems: 'center', gap: 8 }}><FiUpload style={{ color: 'var(--kh-text)' }} /> Upload</button></li>
+                    <li><button className="kh-drawer-item" type="button" onClick={() => handleNavigate("/files")} style={{ color: 'var(--kh-text)', display: 'flex', alignItems: 'center', gap: 8 }}><FiFileText style={{ color: 'var(--kh-text)' }} /> Files</button></li>
                 </ul>
 
                 <div className="kh-drawer-footer">
                     <div className="kh-avatar small">{initialsFromName(userName)}</div>
                     <div className="kh-drawer-user-name">{userName}</div>
-                    <button className="kh-logout" onClick={handleLogout} type="button">Logout</button>
+                    <button className="kh-logout" onClick={handleLogout} type="button"><FiLogOut style={{ marginRight: 6 }} /> Sign Out</button>
                 </div>
             </aside>
         </>

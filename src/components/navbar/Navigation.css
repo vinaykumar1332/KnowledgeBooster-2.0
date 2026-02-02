@@ -1,9 +1,9 @@
 /* Header */
 .kh-header {
     width: 100%;
-    background: var(--kh-white);
-    color: var(--kh-black);
-    border-bottom: 1px solid var(--kh-border-10);
+    background: var(--kh-surface);
+    color: var(--kh-text);
+    border-bottom: 1px solid var(--kh-border);
     position: sticky;
     top: 0;
     z-index: 60;
@@ -36,7 +36,7 @@
     height: 44px;
     border-radius: 10px;
     background: transparent;
-    border: 1px solid var(--kh-border-10);
+    border: 1px solid var(--kh-border);
     cursor: pointer;
     transition: transform .15s ease, background .12s ease;
     padding: 6px;
@@ -55,7 +55,7 @@
     display: block;
     width: 18px;
     height: 2px;
-    background: var(--kh-black);
+    background: var(--kh-text);
     margin: 3px 0;
     border-radius: 2px;
     transition: transform .22s ease, opacity .18s ease;
@@ -98,15 +98,16 @@
     font-family: var(--kh-font-display);
     font-size: 15px;
     font-weight: 700;
-    color: var(--kh-black);
+    color: var(--kh-text);
     letter-spacing: -0.2px;
 }
 
 .kh-title-sub {
     font-family: var(--kh-font-body);
     font-size: 11px;
-    color: #666666;
+    color: var(--kh-text-muted);
     margin-top: 2px;
+    display: block;
 }
 
 /* Center nav (desktop) */
@@ -133,13 +134,13 @@
     font-size: 15px;
     cursor: pointer;
     position: relative;
-    color: var(--kh-black);
+    color: var(--kh-text);
     transition: transform .12s ease, color .12s ease;
 }
 
 .kh-link:hover {
     transform: translateY(-3px);
-    color: var(--kh-black);
+    color: var(--kh-text);
 }
 
 .kh-link-underline {
@@ -154,7 +155,7 @@
 }
 
 .kh-link:hover .kh-link-underline {
-    background: var(--kh-black);
+    background: var(--kh-text);
     transform: scaleX(1);
 }
 
@@ -170,12 +171,12 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    border: 1px solid var(--kh-border-10);
+    border: 1px solid var(--kh-border);
     padding: 6px 8px;
     border-radius: 999px;
     font-family: var(--kh-font-body);
     font-size: 12px;
-    color: var(--kh-black);
+    color: var(--kh-text);
 }
 
 .kh-avatar-btn {
@@ -189,8 +190,8 @@
     width: 40px;
     height: 40px;
     border-radius: 999px;
-    background: var(--kh-black);
-    color: var(--kh-white);
+    background: var(--kh-text);
+    color: var(--kh-bg);
     display: grid;
     place-items: center;
     font-weight: 700;
@@ -207,8 +208,8 @@
     right: 0;
     top: 56px;
     width: 220px;
-    background: var(--kh-white);
-    border: 1px solid var(--kh-border-10);
+    background: var(--kh-surface);
+    border: 1px solid var(--kh-border);
     border-radius: 10px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     opacity: 0;
@@ -229,10 +230,12 @@
     display: flex;
     gap: 10px;
     padding: 12px;
-    border-bottom: 1px solid var(--kh-border-10);
+    border-bottom: 1px solid var(--kh-border);
 }
 
-.kh-profile-left {}
+.kh-profile-left {
+    flex: 1;
+}
 
 .kh-profile-right {
     display: flex;
@@ -249,7 +252,27 @@
 .kh-profile-email {
     font-family: var(--kh-font-body);
     font-size: 12px;
-    color: #666;
+    color: var(--kh-text-muted);
+}
+
+.kh-theme-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--kh-text);
+    border: 1px solid var(--kh-border);
+    cursor: pointer;
+    transition: transform .12s ease, background .12s ease;
+    margin-right: 8px;
+}
+
+.kh-theme-toggle:hover {
+    transform: translateY(-2px);
+    background: rgba(0, 0, 0, 0.03);
 }
 
 .kh-profile-actions {
@@ -261,6 +284,7 @@
     gap: 6px;
 }
 
+
 .kh-profile-actions button {
     background: transparent;
     border: none;
@@ -269,10 +293,11 @@
     border-radius: 8px;
     cursor: pointer;
     font-family: var(--kh-font-body);
+    color: var(--kh-text);
 }
 
 .kh-profile-actions button:hover {
-    background: rgba(0, 0, 0, 0.03);
+    background: var(--kh-surface-hover);
     transform: translateX(6px);
 }
 
@@ -300,7 +325,7 @@
     width: 84%;
     max-width: 380px;
     height: 100vh;
-    background: var(--kh-white);
+    background: var(--kh-surface);
     box-shadow: 8px 0 34px rgba(0, 0, 0, 0.12);
     transform: translateX(-120%);
     transition: transform .32s cubic-bezier(.2, .9, .2, 1), box-shadow .28s ease;
@@ -321,7 +346,7 @@
     justify-content: space-between;
     gap: 12px;
     padding-bottom: 12px;
-    border-bottom: 1px solid var(--kh-border-10);
+    border-bottom: 1px solid var(--kh-border);
 }
 
 .kh-drawer-left {
@@ -338,7 +363,7 @@
 .kh-drawer-sub {
     font-family: var(--kh-font-body);
     font-size: 12px;
-    color: #666;
+    color: var(--kh-text-muted);
 }
 
 /* Drawer list */
@@ -349,6 +374,11 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+}
+
+.kh-drawer-list li,
+.kh-drawer-list button {
+    color: var(--kh-text);
 }
 
 .kh-drawer-item {
@@ -365,9 +395,9 @@
 }
 
 .kh-drawer-item:hover {
-    background: rgba(0, 0, 0, 0.03);
+    background: var(--kh-surface-hover);
     transform: translateX(6px);
-    border-color: var(--kh-border-10);
+    border-color: var(--kh-border);
 }
 
 .kh-drawer-icon {
@@ -381,10 +411,11 @@
     text-align: left;
     font-family: var(--kh-font-body);
     font-size: 14px;
+    color: var(--kh-text);
 }
 
 .kh-drawer-arrow {
-    color: #999;
+    color: var(--kh-text-muted);
 }
 
 /* Drawer footer */
@@ -408,10 +439,18 @@
 .kh-logout {
     padding: 8px 12px;
     border-radius: 8px;
-    border: 1px solid var(--kh-border-10);
+    border: 1px solid var(--kh-border);
     background: transparent;
     cursor: pointer;
     font-family: var(--kh-font-body);
+    color: var(--kh-text);
+    transition: background .14s, color .14s, border .14s;
+}
+
+.kh-logout:hover {
+    background: var(--kh-surface-hover);
+    color: var(--kh-accent);
+    border-color: var(--kh-accent);
 }
 
 /* Responsive rules */
@@ -452,9 +491,7 @@
         font-size: 13px;
     }
 
-    .kh-title-sub {
-        display: none;
-    }
+    /* .kh-title-sub { display: none; } -- removed to always show email */
 
     .kh-header-inner {
         padding: 8px 12px;
