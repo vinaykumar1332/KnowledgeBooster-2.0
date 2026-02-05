@@ -1,0 +1,119 @@
+/* Signup Page Specific Styles */
+
+@import "./login.css";
+
+.auth-sub {
+    text-align: center;
+    color: var(--kh-text-muted);
+    font-size: 15px;
+    margin-bottom: 24px;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+/* Enhanced password rules styling for better visibility */
+.password-rules {
+    background: var(--kh-surface);
+    border: 1px solid var(--kh-border-10);
+    border-radius: 4px;
+    padding: 12px 14px;
+    margin-top: 8px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.password-rules .rule {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.password-rules .rule:last-child {
+    margin-bottom: 0;
+}
+
+.password-rules .rule i {
+    flex-shrink: 0;
+    width: 18px;
+    text-align: center;
+}
+
+.password-rules .rule.pass {
+    color: var(--kh-success-text);
+}
+
+.password-rules .rule.fail {
+    color: var(--kh-danger-text);
+}
+
+/* Form field spacing */
+.field {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.field label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--kh-text);
+}
+
+/* Dropdown field specific styling */
+.auth-dropdown-field {
+    margin-bottom: 24px;
+}
+
+/* Error message styling */
+.p-error {
+    color: var(--kh-danger-text);
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Submit button container */
+.drop-down-sign-up {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .auth-card h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .auth-sub {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .password-rules {
+        padding: 10px 12px;
+    }
+
+    .password-rules .rule {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+}
