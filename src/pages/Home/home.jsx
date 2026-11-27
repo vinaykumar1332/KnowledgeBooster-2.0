@@ -1,8 +1,12 @@
 ﻿// src/pages/Home/home.jsx
-// Landing page. Renders data from /api/home; no filtering or de-duplication happens here.
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Search, UploadCloud } from "lucide-react";
+import {
+    ArrowRight, Search, UploadCloud,
+    BookOpenIcon, UsersIcon, ZapIcon,
+    FileTextIcon, PlayCircleIcon, NewspaperIcon,
+    ShieldCheckIcon, GlobeIcon, SparklesIcon,
+} from "lucide-react";
 
 import Reveal from "../../components/landing/Reveal";
 import StatCounter from "../../components/landing/StatCounter";
@@ -13,17 +17,62 @@ import "./home.css";
 const L = UI_CONFIG.LANDING;
 
 const STEPS = [
-    { n: "01", title: L.STEP_1_TITLE, desc: L.STEP_1_DESC },
-    { n: "02", title: L.STEP_2_TITLE, desc: L.STEP_2_DESC },
-    { n: "03", title: L.STEP_3_TITLE, desc: L.STEP_3_DESC },
+    {
+        n: "01",
+        icon: UploadCloud,
+        title: L.STEP_1_TITLE,
+        desc: L.STEP_1_DESC,
+    },
+    {
+        n: "02",
+        icon: GlobeIcon,
+        title: L.STEP_2_TITLE,
+        desc: L.STEP_2_DESC,
+    },
+    {
+        n: "03",
+        icon: SparklesIcon,
+        title: L.STEP_3_TITLE,
+        desc: L.STEP_3_DESC,
+    },
 ];
 
-/**
- * @param {{ guest?: boolean }} props  guest=true shows Sign up / Log in instead of member actions
- */
+const FEATURES = [
+    {
+        icon: FileTextIcon,
+        title: "PDFs & Study Notes",
+        desc: "Browse hundreds of community-uploaded PDFs across engineering, science, business and more.",
+    },
+    {
+        icon: PlayCircleIcon,
+        title: "YouTube Videos",
+        desc: "Discover curated educational videos from YouTube — search any topic without leaving KnowledgeHub.",
+    },
+    {
+        icon: NewspaperIcon,
+        title: "DEV.to Articles",
+        desc: "Get the latest tech articles from the DEV community alongside your PDF search results.",
+    },
+    {
+        icon: UsersIcon,
+        title: "Community Driven",
+        desc: "Every resource is shared by a real student or professional — no paywalls, no sign-up walls.",
+    },
+    {
+        icon: ZapIcon,
+        title: "Instant Search",
+        desc: "Full-text search across all uploaded materials. Find what you need in seconds.",
+    },
+    {
+        icon: ShieldCheckIcon,
+        title: "Free Forever",
+        desc: "No subscription, no ads. KnowledgeHub is built for learners and kept free for everyone.",
+    },
+];
+
 export default function HomePage({ guest = false }) {
     const navigate = useNavigate();
-    const [status, setStatus] = useState("loading"); // loading | ready | error
+    const [status, setStatus] = useState("loading");
     const [featured, setFeatured] = useState([]);
     const [stats, setStats] = useState(null);
 
@@ -39,9 +88,7 @@ export default function HomePage({ guest = false }) {
                 setStatus("error");
             }
         });
-        return () => {
-            cancelled = true;
-        };
+        return () => { cancelled = true; };
     }, []);
 
     const openTitle = (title) => navigate(`/files?title=${encodeURIComponent(title)}`);
@@ -49,7 +96,8 @@ export default function HomePage({ guest = false }) {
 
     return (
         <div className="home">
-            {/* Hero */}
+
+            {/* ── Hero ──────────────────────────────────────────────────── */}
             <section className="hero">
                 <div className="hero-grid" aria-hidden="true" />
                 <p className="hero-eyebrow">{L.HERO_EYEBROW}</p>
@@ -61,27 +109,35 @@ export default function HomePage({ guest = false }) {
                 <div className="hero-actions">
                     {guest ? (
                         <>
-                            <Link to="/signup" className="inline-flex h-11 items-center gap-2 rounded-md bg-foreground px-5 text-sm font-bold text-background no-underline transition-[transform,opacity] duration-200 ease-out hover:-translate-y-px hover:opacity-90">
-                                {L.GUEST_START} <ArrowRight aria-hidden="true" />
+                            <Link to="/signup" className="hero-btn-primary">
+                                {L.GUEST_START} <ArrowRight className="hero-btn-icon" aria-hidden="true" />
                             </Link>
-                            <Link to="/login" className="inline-flex h-11 items-center gap-2 rounded-md border border-solid border-border bg-background px-5 text-sm font-bold text-foreground no-underline transition-[transform,border-color] duration-200 ease-out hover:-translate-y-px hover:border-foreground hover:opacity-100">
+                            <Link to="/login" className="hero-btn-secondary">
                                 {L.GUEST_LOGIN}
                             </Link>
                         </>
                     ) : (
                         <>
-                            <Link to="/upload" className="inline-flex h-11 items-center gap-2 rounded-md bg-foreground px-5 text-sm font-bold text-background no-underline transition-[transform,opacity] duration-200 ease-out hover:-translate-y-px hover:opacity-90">
-                                <UploadCloud aria-hidden="true" /> {L.UPLOAD_BTN}
+                            <Link to="/upload" className="hero-btn-primary">
+                                <UploadCloud className="hero-btn-icon" aria-hidden="true" /> {L.UPLOAD_BTN}
                             </Link>
-                            <Link to="/files" className="inline-flex h-11 items-center gap-2 rounded-md border border-solid border-border bg-background px-5 text-sm font-bold text-foreground no-underline transition-[transform,border-color] duration-200 ease-out hover:-translate-y-px hover:border-foreground hover:opacity-100">
-                                <Search aria-hidden="true" /> {L.BROWSE_BTN}
+                            <Link to="/files" className="hero-btn-secondary">
+                                <Search className="hero-btn-icon" aria-hidden="true" /> {L.BROWSE_BTN}
                             </Link>
                         </>
                     )}
                 </div>
+
+                {/* Floating resource-type pills */}
+                <div className="hero-pills" aria-hidden="true">
+                    <span className="hero-pill"><FileTextIcon size={12} /> PDFs</span>
+                    <span className="hero-pill"><PlayCircleIcon size={12} /> Videos</span>
+                    <span className="hero-pill"><NewspaperIcon size={12} /> Articles</span>
+                    <span className="hero-pill"><BookOpenIcon size={12} /> Notes</span>
+                </div>
             </section>
 
-            {/* Stats */}
+            {/* ── Stats strip ───────────────────────────────────────────── */}
             <section className="stats-strip" aria-label="Library statistics">
                 <StatCounter label={L.STAT_FILES} value={statValue("files")} />
                 <StatCounter label={L.STAT_TITLES} value={statValue("titles")} />
@@ -90,13 +146,43 @@ export default function HomePage({ guest = false }) {
 
             {status === "error" && <p className="home-note" role="alert">{L.LOAD_ERROR}</p>}
 
-            {/* How it works */}
+            {/* ── What's inside ─────────────────────────────────────────── */}
             <section className="home-section">
-                <Reveal as="h2" className="section-title">{L.STEPS_TITLE}</Reveal>
+                <Reveal>
+                    <div className="section-eyebrow">Everything in one place</div>
+                    <h2 className="section-title">Your all-in-one knowledge hub</h2>
+                    <p className="section-sub">
+                        Search PDFs, watch tutorials and read dev articles — all without switching tabs.
+                    </p>
+                </Reveal>
+                <div className="features-grid">
+                    {FEATURES.map((f, i) => (
+                        <Reveal key={f.title} delay={i * 70} className="feature-tile">
+                            <span className="feature-tile-icon">
+                                <f.icon size={20} aria-hidden="true" />
+                            </span>
+                            <h3 className="feature-tile-title">{f.title}</h3>
+                            <p className="feature-tile-desc">{f.desc}</p>
+                        </Reveal>
+                    ))}
+                </div>
+            </section>
+
+            {/* ── How it works ──────────────────────────────────────────── */}
+            <section className="home-section">
+                <Reveal>
+                    <div className="section-eyebrow">Simple process</div>
+                    <h2 className="section-title">{L.STEPS_TITLE}</h2>
+                </Reveal>
                 <div className="steps-grid">
                     {STEPS.map((s, i) => (
                         <Reveal key={s.n} className="step-card" delay={i * 120}>
-                            <span className="step-num">{s.n}</span>
+                            <div className="step-top">
+                                <span className="step-num">{s.n}</span>
+                                <span className="step-icon-wrap">
+                                    <s.icon size={18} aria-hidden="true" />
+                                </span>
+                            </div>
                             <h3 className="step-title">{s.title}</h3>
                             <p className="step-desc">{s.desc}</p>
                         </Reveal>
@@ -104,13 +190,16 @@ export default function HomePage({ guest = false }) {
                 </div>
             </section>
 
-            {/* Featured materials */}
+            {/* ── Featured materials ────────────────────────────────────── */}
             <section className="home-section">
-                <Reveal as="h2" className="section-title">{L.LATEST_MATERIALS}</Reveal>
+                <Reveal>
+                    <div className="section-eyebrow">Community picks</div>
+                    <h2 className="section-title">{L.LATEST_MATERIALS}</h2>
+                </Reveal>
 
                 {status === "loading" && (
                     <div className="featured-grid" aria-busy="true">
-                        {[0, 1, 2].map((i) => (
+                        {[0, 1, 2, 3].map((i) => (
                             <div key={i} className="feature-card skeleton-card" />
                         ))}
                     </div>
@@ -123,30 +212,49 @@ export default function HomePage({ guest = false }) {
                 {status === "ready" && featured.length > 0 && (
                     <div className="featured-grid">
                         {featured.map((f, i) => (
-                            <Reveal key={f.fileid || `${f.title}-${i}`} delay={(i % 4) * 80}>
+                            <Reveal key={f.fileid || `${f.title}-${i}`} delay={(i % 4) * 70}>
                                 <button type="button" className="feature-card" onClick={() => openTitle(f.title)}>
+                                    {/* Accent bar */}
+                                    <span className="feature-accent-bar" aria-hidden="true" />
                                     <span className="feature-badge">
-                                        {f.category} â€¢ {f.subcategory}
+                                        {f.category}{f.subcategory ? ` · ${f.subcategory}` : ""}
                                     </span>
                                     <span className="feature-title">{f.title || "Untitled"}</span>
-                                    {f.description && <span className="feature-desc">{f.description}</span>}
+                                    {f.description && (
+                                        <span className="feature-desc">{f.description}</span>
+                                    )}
+                                    <span className="feature-meta">
+                                        {f.username && <span className="feature-author">by {f.username}</span>}
+                                        <span className="feature-pdf-tag">
+                                            <FileTextIcon size={11} aria-hidden="true" /> PDF
+                                        </span>
+                                    </span>
                                     <span className="feature-cta">
-                                        {L.FEATURED_OPEN} <ArrowRight aria-hidden="true" />
+                                        {L.FEATURED_OPEN} <ArrowRight size={14} aria-hidden="true" />
                                     </span>
                                 </button>
                             </Reveal>
                         ))}
                     </div>
                 )}
+
+                {status === "ready" && featured.length > 0 && (
+                    <Reveal className="featured-browse-row">
+                        <Link to="/files" className="hero-btn-secondary featured-browse-btn">
+                            Browse all resources <ArrowRight size={15} aria-hidden="true" />
+                        </Link>
+                    </Reveal>
+                )}
             </section>
 
-            {/* Call to action */}
+            {/* ── CTA band ──────────────────────────────────────────────── */}
             <section className="cta-band">
                 <Reveal>
+                    <div className="cta-eyebrow">Join the community</div>
                     <h2 className="cta-title">{L.CTA_TITLE}</h2>
                     <p className="cta-sub">{L.CTA_SUBTITLE}</p>
-                    <Link to={guest ? "/signup" : "/upload"} className="inline-flex h-11 items-center gap-2 rounded-md bg-background px-5 text-sm font-bold text-foreground no-underline transition-transform duration-200 ease-out hover:-translate-y-px hover:opacity-100">
-                        {L.CTA_BTN} <ArrowRight aria-hidden="true" />
+                    <Link to={guest ? "/signup" : "/upload"} className="cta-action-btn">
+                        {L.CTA_BTN} <ArrowRight size={16} aria-hidden="true" />
                     </Link>
                 </Reveal>
             </section>
@@ -157,4 +265,3 @@ export default function HomePage({ guest = false }) {
         </div>
     );
 }
-

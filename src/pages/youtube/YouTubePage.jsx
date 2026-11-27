@@ -125,7 +125,7 @@ export default function YouTubePage() {
             {/* ── Hero ──────────────────────────────────────────────────── */}
             <div className="mb-6 overflow-hidden rounded-2xl border border-border bg-background shadow-sm">
                 <div className="relative px-5 py-5 sm:px-7 sm:py-6" style={{
-                    background: "linear-gradient(135deg, #ff0000 0%, #cc0000 100%)",
+                    background: "linear-gradient(135deg, var(--yt-brand) 0%, var(--yt-brand-dark) 100%)",
                 }}>
                     {/* grid texture */}
                     <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
@@ -303,7 +303,7 @@ function VideoCard({ video, onPreview }) {
                 <p className="m-0 text-xs text-muted-foreground line-clamp-1">{video.channel}</p>
                 <div className="mt-auto flex gap-2 pt-2">
                     <button type="button" onClick={onPreview}
-                        className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#ff0000] text-xs font-bold text-white transition-opacity hover:opacity-90">
+                        className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-xl text-xs font-bold transition-opacity hover:opacity-90" style={{ background: "var(--yt-brand)", color: "var(--yt-brand-fg)" }}>
                         <PlayCircleIcon className="size-3.5" /> Watch
                     </button>
                     <a href={video.url} target="_blank" rel="noopener noreferrer"
@@ -332,10 +332,10 @@ function EmbedModal({ video, onClose }) {
     return (
         <div
             role="dialog" aria-modal="true" aria-label={video.title}
-            style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, width: "100%", height: "100dvh", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem", background: "rgba(0,0,0,0.85)", overflowY: "auto" }}
+            style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, width: "100%", height: "100dvh", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem", background: "var(--overlay-bg)", overflowY: "auto" }}
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
-            <div style={{ width: "100%", maxWidth: "56rem", display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: "1rem", background: "var(--background)", border: "1px solid var(--border)", boxShadow: "0 25px 50px rgba(0,0,0,0.6)" }}>
+            <div style={{ width: "100%", maxWidth: "56rem", display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: "1rem", background: "var(--background)", border: "0.0625rem solid var(--border)", boxShadow: "0 1.5rem 3rem var(--overlay-bg)" }}>
                 <div className="flex items-start justify-between gap-3 border-b border-border px-4 py-3">
                     <h2 className="m-0 text-sm font-semibold text-foreground leading-snug line-clamp-2">{video.title}</h2>
                     <div className="flex shrink-0 items-center gap-1">
@@ -350,7 +350,7 @@ function EmbedModal({ video, onClose }) {
                         </button>
                     </div>
                 </div>
-                <div style={{ position: "relative", paddingBottom: "56.25%", background: "#000" }}>
+                <div style={{ position: "relative", paddingBottom: "56.25%", background: "var(--video-bg)" }}>
                     <iframe
                         src={`${video.embedUrl}?autoplay=1&rel=0`}
                         title={video.title}
