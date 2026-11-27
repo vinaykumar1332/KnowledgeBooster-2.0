@@ -1,74 +1,61 @@
-/**
- * Reusable Button Component
- * Configurable, accessible, and styled
- */
+// Application button. Same props as before, rendered with the shadcn Button.
+import React from "react";
+import { Loader2Icon } from "lucide-react";
+import { Button as UIButton } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-import React from 'react';
-import './Button.css';
+const VARIANTS = {
+    primary: "default",
+    secondary: "outline",
+    subtle: "secondary",
+    danger: "destructive",
+    ghost: "ghost",
+};
 
-const Button = ({
-    // Content
+// Touch-friendly heights (44px and up on the default size)
+const SIZES = {
+    sm: "h-9 px-3 text-sm",
+    md: "h-11 px-5 text-sm",
+    lg: "h-12 px-6 text-base",
+};
+
+export default function Button({
     children,
     label,
     icon: Icon,
-
-    // Styling
-    variant = 'primary', // primary, secondary, danger, ghost
-    size = 'md', // sm, md, lg
+    variant = "primary",
+    size = "md",
     fullWidth = false,
-
-    // State
     loading = false,
     disabled = false,
-
-    // Interaction
     onClick,
-    type = 'button',
-
-    // Accessibility
+    type = "button",
     title,
     ariaLabel,
-
-    // Additional props
-    className = '',
+    className = "",
     ...props
-}) => {
+}) {
     const isDisabled = disabled || loading;
 
     return (
-        <button
+        <UIButton
             type={type}
+            variant={VARIANTS[variant] || "default"}
             onClick={onClick}
             disabled={isDisabled}
             title={title}
             aria-label={ariaLabel}
-            className={`
-                btn
-                btn-${variant}
-                btn-${size}
-                ${fullWidth ? 'btn-full-width' : ''}
-                ${loading ? 'btn-loading' : ''}
-                ${className}
-            `.trim()}
+            aria-busy={loading || undefined}
+            className={cn(
+                SIZES[size] || SIZES.md,
+                "transition-[transform,background-color,box-shadow,opacity] duration-200 ease-out hover:-translate-y-px hover:shadow-md active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none",
+                fullWidth && "w-full",
+                className
+            )}
             {...props}
         >
-            {loading && (
-                <span className="btn-spinner" aria-hidden="true">
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" />
-                    </svg>
-                </span>
-            )}
-
-            {Icon && !loading && (
-                <Icon className="btn-icon" aria-hidden="true" />
-            )}
-
-            <span className="btn-text">
-                {children || label || 'Button'}
-            </span>
-        </button>
+            {loading ? <Loader2Icon className="animate-spin" aria-hidden="true" /> : Icon && <Icon aria-hidden="true" />}
+            {children || label}
+        </UIButton>
     );
-};
-
-export default Button;
+}

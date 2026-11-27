@@ -1,213 +1,192 @@
-// pages/Signup.jsx
-import React, { useState, useEffect } from "react";
-import { Dropdown } from "primereact/dropdown";
-import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
-import ToastNotification from "../../components/toast/ToastNotification";
+﻿// src/pages/auth/Signup.jsx
+import React, { useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Input from "../../components/Input/Input";
+import Button from "../../components/Button/Button";
+import Select from "../../components/shared/Select";
+import AuthLayout from "./AuthLayout";
 import { signup } from "../../services/authService";
-import "./login.css";
+import { useToast } from "../../hooks/useToast";
+import { UI_CONFIG } from "../../config/ui.config";
+import { cn } from "@/lib/utils";
+
+const T = UI_CONFIG.AUTH.SIGNUP;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const USER_TYPES = [
+    { value: "student", label: "Student" },
+    { value: "professional", label: "Professional" },
+    { value: "others", label: "Others" },
+];
+
+const EMPTY = { username: "", email: "", password: "", confirmPassword: "", userType: "" };
+
+/** Each rule is checked live while the user types. */
+const passwordRules = (pw) => [
+    { id: "length", text: "At least 8 characters", met: pw.length >= 8 },
+    { id: "upper", text: "2 uppercase letters", met: (pw.match(/[A-Z]/g) || []).length >= 2 },
+    { id: "digits", text: "2 numbers", met: (pw.match(/\d/g) || []).length >= 2 },
+    { id: "special", text: "1 special character (!@#$%^&*)", met: /[!@#$%^&*]/.test(pw) },
+];
 
 export default function Signup() {
-    const [form, setForm] = useState({
-        username: "",
-        email: "",
-        password: "",
-        userType: null,
-    });
-
+    const navigate = useNavigate();
+    const toast = useToast();
+    const [form, setForm] = useState(EMPTY);
+    const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
-    const [toast, setToast] = useState(null);
-    const [touched, setTouched] = useState({}); // Track which fields user touched
 
-    const userTypes = [
-        { label: "Student", value: "student" },
-        { label: "Professional", value: "professional" },
-        { label: "Others", value: "others" },
-    ];
+    const rules = useMemo(() => passwordRules(form.password), [form.password]);
+    const passwordValid = rules.every((r) => r.met);
 
-    const passwordRules = [
-        { test: form.password.length >= 8, text: "At least 8 characters" },
-        { test: (form.password.match(/[A-Z]/g) || []).length >= 2, text: "2 uppercase letters" },
-        { test: (form.password.match(/\d/g) || []).length >= 2, text: "2 numbers" },
-        { test: /[!@#$%^&*]/.test(form.password), text: "1 special character (!@#$%^&*)" },
-    ];
-
-    const allValid = passwordRules.every((rule) => rule.test);
-    const hasPasswordInput = form.password.length > 0;
-    const showPasswordRules = hasPasswordInput && !allValid; // Only show when typing & invalid
-
-    const isFormValid =
-        form.username.trim() &&
-        form.email.trim().includes("@") &&
-        form.userType &&
-        allValid;
-
-    const showFieldError = (field) => touched[field];
-
-    const showToast = (message, type = "error") => {
-        setToast({ message, type });
-        setTimeout(() => setToast(null), 5000);
+    const set = (key) => (e) => {
+        const value = e && e.target ? e.target.value : e;
+        setForm((f) => ({ ...f, [key]: value }));
+        if (errors[key]) setErrors((s) => ({ ...s, [key]: "" }));
     };
 
-    const handleSignup = async (e) => {
-        e.preventDefault();
+    const validate = () => {
+        const next = {};
+        if (!form.username.trim()) next.username = T.ERROR_USERNAME_REQUIRED;
+        if (!form.email.trim()) next.email = T.ERROR_EMAIL_REQUIRED;
+        else if (!EMAIL_RE.test(form.email.trim())) next.email = UI_CONFIG.AUTH.LOGIN.ERROR_INVALID_EMAIL;
+        if (!passwordValid) next.password = T.ERROR_WEAK_PASSWORD;
+        if (form.confirmPassword !== form.password) next.confirmPassword = T.ERROR_PASSWORD_MISMATCH;
+        if (!form.userType) next.userType = T.USER_TYPE_REQUIRED;
+        setErrors(next);
+        return Object.keys(next).length === 0;
+    };
 
-        if (!isFormValid) {
-            showToast("Please fix the errors above");
-            return;
-        }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!validate()) return;
 
         setLoading(true);
+        const res = await signup({
+            username: form.username.trim(),
+            email: form.email.trim().toLowerCase(),
+            password: form.password,
+            confirmPassword: form.confirmPassword,
+            userType: form.userType,
+        });
+        setLoading(false);
 
-        try {
-            const data = await signup({
-                username: form.username.trim(),
-                email: form.email.trim().toLowerCase(),
-                password: form.password,
-                confirmPassword: form.confirmPassword ?? form.password,
-            });
-
-            if (!data.ok) {
-                showToast(data.msg || data.message || "Signup failed");
-                return;
-            }
-
-            showToast("Account created successfully!", "success");
-            setTimeout(() => {
-                window.location.href = "/login";
-            }, 2000);
-        } catch (err) {
-            console.error("Signup error:", err);
-            showToast("Connection failed. Please try again.");
-        } finally {
-            setLoading(false);
+        if (!res.ok) {
+            toast.error(res.msg || T.ERROR_GENERIC);
+            return;
         }
+        toast.success(T.SUCCESS_MESSAGE);
+        navigate("/login", { replace: true });
     };
 
     return (
-        <>
-            {toast && (
-                <ToastNotification
-                    message={toast.message}
-                    type={toast.type}
-                    onClose={() => setToast(null)}
+        <AuthLayout
+            title={T.TITLE}
+            subtitle={T.SUBTITLE}
+            footer={
+                <>
+                    {T.LOGIN_LINK}{" "}
+                    <Link to="/login" className="font-semibold text-foreground underline underline-offset-4">
+                        {T.LOGIN_LINK_TEXT}
+                    </Link>
+                </>
+            }
+        >
+            <form className="grid gap-5" onSubmit={handleSubmit} noValidate>
+
+                <Input
+                    name="username"
+                    label={T.USERNAME_LABEL}
+                    placeholder={T.USERNAME_PLACEHOLDER}
+                    autoComplete="name"
+                    value={form.username}
+                    onChange={set("username")}
+                    error={errors.username}
+                    disabled={loading}
+                    required
                 />
-            )}
 
-            <div className="auth-page">
-                <div className="auth-card">
-                    <h1>
-                        Create Account
-                    </h1>
-                    <p className="text-center text-gray-600 mb-6">
-                        Join us today — it's free and quick!
-                    </p>
+                <Input
+                    name="email"
+                    type="email"
+                    label={T.EMAIL_LABEL}
+                    placeholder={T.EMAIL_PLACEHOLDER}
+                    autoComplete="email"
+                    value={form.email}
+                    onChange={set("email")}
+                    error={errors.email}
+                    disabled={loading}
+                    required
+                />
 
-                    <form onSubmit={handleSignup} className="space-y-5">
-                        {/* Full Name */}
-                        <div className="field">
-                            <label> Full Name</label>
-                            <InputText
-                                value={form.username}
-                                onChange={(e) => setForm({ ...form, username: e.target.value })}
-                                onBlur={() => setTouched({ ...touched, username: true })}
-                                placeholder="John Doe"
-                                className={`w-full ${touched.username && !form.username.trim() ? "p-invalid" : ""}`}
-                                required
-                            />
-                            {showFieldError("username") && !form.username.trim() && (
-                                <small className="p-error">Full name is required</small>
-                            )}
-                        </div>
+                <Select
+                    name="userType"
+                    label={T.USER_TYPE_LABEL}
+                    placeholder={T.USER_TYPE_PLACEHOLDER}
+                    options={USER_TYPES}
+                    value={form.userType}
+                    onChange={set("userType")}
+                    error={errors.userType}
+                    disabled={loading}
+                    required
+                />
 
-                        {/* Email */}
-                        <div className="field">
-                            <label> Email Address</label>
-                            <InputText
-                                type="email"
-                                value={form.email}
-                                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                onBlur={() => setTouched({ ...touched, email: true })}
-                                placeholder="you@example.com"
-                                className={`w-full ${touched.email && !form.email.includes("@") ? "p-invalid" : ""}`}
-                                required
-                            />
-                            {showFieldError("email") && !form.email.includes("@") && (
-                                <small className="p-error">Valid email is required</small>
-                            )}
-                        </div>
+                <div className="grid gap-3">
+                    <Input
+                        name="password"
+                        type="password"
+                        label={T.PASSWORD_LABEL}
+                        placeholder={T.PASSWORD_PLACEHOLDER}
+                        autoComplete="new-password"
+                        value={form.password}
+                        onChange={set("password")}
+                        error={errors.password}
+                        disabled={loading}
+                        required
+                    />
 
-                        {/* Password */}
-                        <div className="field">
-                            <label> Password</label>
-                            <Password
-                                value={form.password}
-                                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                                onFocus={() => setTouched({ ...touched, password: true })}
-                                feedback={false}
-                                toggleMask
-                                placeholder="Create a strong password"
-                                className="w-full"
-                            />
-
-                            {showFieldError("password") && !allValid && (
-                                <small className="p-error">Password does not meet requirements</small>
-                            )}
-
-                            {/* Show rules only when user types password & it's invalid */}
-                            <div className={`password-rules mt-3 transition-all duration-300 ${showPasswordRules ? "opacity-100 max-h-96" : "opacity-0 max-h-0 overflow-hidden"}`}>
-                                {passwordRules.map((rule, i) => (
-                                    <div
-                                        key={i}
-                                        className={`rule text-sm flex items-center gap-2 ${rule.test ? "text-green-600" : "text-red-500"}`}
-                                    >
-                                        <i className={`pi text-xs ${rule.test ? "pi-check-circle" : "pi-times-circle"}`} />
-                                        {rule.text}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* User Type Dropdown - Fixed: no layout shift */}
-                        <div className="field auth-dropdown-field">
-                            <label> I am a</label>
-                            <Dropdown
-                                value={form.userType}
-                                options={userTypes}
-                                onChange={(e) => setForm({ ...form, userType: e.value })}
-                                onBlur={() => setTouched({ ...touched, userType: true })}
-                                placeholder="Select your role"
-                                className="w-full"
-                                panelClassName="z-50" // Ensures dropdown floats above everything
-                                required
-                            />
-                            {showFieldError("userType") && !form.userType && (
-                                <small className="p-error">User type is required</small>
-                            )}
-                        </div>
-
-                        {/* Submit Button - Clean & Consistent */}
-                        <div className="drop-down-sign-up">
-                            <button
-                                type="submit"
-                                className="btn-primary btn"
-                                disabled={loading || !isFormValid}
-                            >
-                                <span className="btn-text">
-                                    {loading ? "Creating Account..." : "Create Account"}
-                                </span>
-                            </button>
-                        </div>
-                    </form>
-
-                    <p className="auth-foot mt-6">
-                        Already have an account?{" "}
-                        <a href="/login" className="text-blue-600 font-medium hover:underline">
-                            Login here
-                        </a>
-                    </p>
+                    {form.password && (
+                        <ul aria-label="Password requirements" className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs">
+                            {rules.map((r) => (
+                                <li
+                                    key={r.id}
+                                    className={cn(
+                                        "flex items-center gap-2 transition-colors duration-200",
+                                        r.met ? "text-foreground" : "text-muted-foreground"
+                                    )}
+                                >
+                                    <span
+                                        aria-hidden="true"
+                                        className={cn(
+                                            "size-1.5 rounded-full transition-colors duration-200",
+                                            r.met ? "bg-foreground" : "bg-muted-foreground/40"
+                                        )}
+                                    />
+                                    {r.text}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
-            </div>
-        </>
+
+                <Input
+                    name="confirmPassword"
+                    type="password"
+                    label={T.CONFIRM_PASSWORD_LABEL}
+                    placeholder={T.CONFIRM_PASSWORD_PLACEHOLDER}
+                    autoComplete="new-password"
+                    value={form.confirmPassword}
+                    onChange={set("confirmPassword")}
+                    error={errors.confirmPassword}
+                    disabled={loading}
+                    required
+                />
+
+                <Button type="submit" variant="primary" size="lg" fullWidth loading={loading} disabled={loading}>
+                    {loading ? T.SUBMITTING_BTN : T.SUBMIT_BTN}
+                </Button>
+            </form>
+        </AuthLayout>
     );
 }
+

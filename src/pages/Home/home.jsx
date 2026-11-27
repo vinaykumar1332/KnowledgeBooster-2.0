@@ -1,10 +1,9 @@
-// src/pages/Home/home.jsx
+﻿// src/pages/Home/home.jsx
 // Landing page. Renders data from /api/home; no filtering or de-duplication happens here.
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiArrowRight, FiSearch, FiUploadCloud } from "react-icons/fi";
+import { ArrowRight, Search, UploadCloud } from "lucide-react";
 
-import Button from "../../components/Button/Button";
 import Reveal from "../../components/landing/Reveal";
 import StatCounter from "../../components/landing/StatCounter";
 import { fetchHome } from "../../services/filesService";
@@ -62,21 +61,21 @@ export default function HomePage({ guest = false }) {
                 <div className="hero-actions">
                     {guest ? (
                         <>
-                            <Link to="/signup" className="btn btn-primary btn-lg">
-                                {L.GUEST_START} <FiArrowRight aria-hidden="true" />
+                            <Link to="/signup" className="inline-flex h-11 items-center gap-2 rounded-md bg-foreground px-5 text-sm font-bold text-background no-underline transition-[transform,opacity] duration-200 ease-out hover:-translate-y-px hover:opacity-90">
+                                {L.GUEST_START} <ArrowRight aria-hidden="true" />
                             </Link>
-                            <Link to="/login" className="btn btn-secondary btn-lg">
+                            <Link to="/login" className="inline-flex h-11 items-center gap-2 rounded-md border border-solid border-border bg-background px-5 text-sm font-bold text-foreground no-underline transition-[transform,border-color] duration-200 ease-out hover:-translate-y-px hover:border-foreground hover:opacity-100">
                                 {L.GUEST_LOGIN}
                             </Link>
                         </>
                     ) : (
                         <>
-                            <Link to="/upload" className="btn btn-primary btn-lg">
-                                <FiUploadCloud aria-hidden="true" /> {L.UPLOAD_BTN}
+                            <Link to="/upload" className="inline-flex h-11 items-center gap-2 rounded-md bg-foreground px-5 text-sm font-bold text-background no-underline transition-[transform,opacity] duration-200 ease-out hover:-translate-y-px hover:opacity-90">
+                                <UploadCloud aria-hidden="true" /> {L.UPLOAD_BTN}
                             </Link>
-                            <Button variant="secondary" size="lg" icon={FiSearch} onClick={() => navigate("/files")}>
-                                {L.BROWSE_BTN}
-                            </Button>
+                            <Link to="/files" className="inline-flex h-11 items-center gap-2 rounded-md border border-solid border-border bg-background px-5 text-sm font-bold text-foreground no-underline transition-[transform,border-color] duration-200 ease-out hover:-translate-y-px hover:border-foreground hover:opacity-100">
+                                <Search aria-hidden="true" /> {L.BROWSE_BTN}
+                            </Link>
                         </>
                     )}
                 </div>
@@ -127,12 +126,12 @@ export default function HomePage({ guest = false }) {
                             <Reveal key={f.fileid || `${f.title}-${i}`} delay={(i % 4) * 80}>
                                 <button type="button" className="feature-card" onClick={() => openTitle(f.title)}>
                                     <span className="feature-badge">
-                                        {f.category} • {f.subcategory}
+                                        {f.category} â€¢ {f.subcategory}
                                     </span>
                                     <span className="feature-title">{f.title || "Untitled"}</span>
                                     {f.description && <span className="feature-desc">{f.description}</span>}
                                     <span className="feature-cta">
-                                        {L.FEATURED_OPEN} <FiArrowRight aria-hidden="true" />
+                                        {L.FEATURED_OPEN} <ArrowRight aria-hidden="true" />
                                     </span>
                                 </button>
                             </Reveal>
@@ -146,8 +145,8 @@ export default function HomePage({ guest = false }) {
                 <Reveal>
                     <h2 className="cta-title">{L.CTA_TITLE}</h2>
                     <p className="cta-sub">{L.CTA_SUBTITLE}</p>
-                    <Link to={guest ? "/signup" : "/upload"} className="btn btn-lg cta-btn">
-                        {L.CTA_BTN} <FiArrowRight aria-hidden="true" />
+                    <Link to={guest ? "/signup" : "/upload"} className="inline-flex h-11 items-center gap-2 rounded-md bg-background px-5 text-sm font-bold text-foreground no-underline transition-transform duration-200 ease-out hover:-translate-y-px hover:opacity-100">
+                        {L.CTA_BTN} <ArrowRight aria-hidden="true" />
                     </Link>
                 </Reveal>
             </section>
@@ -158,3 +157,4 @@ export default function HomePage({ guest = false }) {
         </div>
     );
 }
+

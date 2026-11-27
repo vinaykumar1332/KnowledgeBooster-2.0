@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     /* Theme tokens */
     --kh-bg: #ffffff;
     --kh-surface: #ffffff;
@@ -28,7 +28,7 @@
     --kh-font-weight-bold: 700;
 
     /* Spacing tokens */
-    --kh-radius: 0px;
+    --kh-radius: 5px;
     --kh-space: 16px;
 
     /* Back-compat tokens */

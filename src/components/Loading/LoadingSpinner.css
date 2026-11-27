@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Loading Spinner Component Styles
  * Multiple loading animation variants
  */
@@ -37,7 +37,7 @@
 
 .loading-fullscreen .loading-spinner {
     background-color: var(--kh-surface);
-    border-radius: 8px;
+    border-radius: var(--kh-radius);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     padding: 40px;
     min-width: 200px;
@@ -145,7 +145,7 @@
     width: 200px;
     height: 4px;
     background-color: var(--kh-border);
-    border-radius: 2px;
+    border-radius: var(--kh-radius);
     overflow: hidden;
 }
 
@@ -153,7 +153,7 @@
     height: 100%;
     background-color: var(--kh-accent);
     animation: fillBar 2s infinite ease-in-out;
-    border-radius: 2px;
+    border-radius: var(--kh-radius);
 }
 
 @keyframes fillBar {
@@ -203,7 +203,7 @@
 
 .skeleton-card {
     height: 150px;
-    border-radius: 8px;
+    border-radius: var(--kh-radius);
 }
 
 .skeleton-circle {
@@ -219,7 +219,7 @@
 .skeleton-line {
     height: 12px;
     background-color: var(--kh-border);
-    border-radius: 4px;
+    border-radius: var(--kh-radius);
     margin-bottom: 8px;
 }
 
@@ -266,3 +266,4 @@
 [data-theme="dark"] .loading-fullscreen .loading-spinner {
     background-color: var(--kh-surface);
 }
+

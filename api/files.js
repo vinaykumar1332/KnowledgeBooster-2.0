@@ -1,41 +1,28 @@
 // api/files.js
+// GET  /api/files?offset=&limit=&email=   list files (missing offset/limit = all; email = one uploader)
+// POST /api/files                  pass-through for the older { action, ... } body contract
+import { callUpstream, loadAllRows, page, readBody, setCors } from "../lib/filesUpstream.js";
+
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    setCors(res);
+    if (req.method === "OPTIONS") return res.status(204).end();
 
-  if (req.method === "OPTIONS") return res.status(204).end();
-
-  // Try environment variables first, then fall back to hardcoded Google Apps Script URL
-  const FILES_URL = process.env.VITE_FILES_URL 
-    || process.env.FILES_URL 
-    || "https://script.google.com/macros/s/AKfycbyM5SPa85Og4JuUKsyJceBPDloelFGlUIrrbGw3Yw-Jte5GrUC8JnmF0ZN_9pgIXvSzuw/exec";
-  
-  if (!FILES_URL) return res.status(500).json({ ok: false, msg: "FILES_URL not configured" });
-
-  try {
-    let body = {};
-    if (req.method === "POST") {
-      const chunks = [];
-      for await (const chunk of req) chunks.push(chunk);
-      body = JSON.parse(Buffer.concat(chunks).toString() || "{}");
-    }
-    const upstream = await fetch(FILES_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-
-    const raw = await upstream.text();
-    let parsed;
     try {
-      parsed = JSON.parse(raw);
-    } catch (e) {
-      parsed = { ok: false, msg: "Upstream returned non-JSON", raw };
-    }
+        if (req.method === "GET") {
+            const email = String(req.query?.email || "").trim().toLowerCase();
+            const all = await loadAllRows();
+            const rows = email ? all.filter((r) => String(r.email || "").trim().toLowerCase() === email) : all;
+            return res.status(200).json({ ok: true, ...page(rows, req.query?.offset, req.query?.limit) });
+        }
 
-    return res.status(upstream.status || 200).json(parsed);
-  } catch (err) {
-    return res.status(500).json({ ok: false, error: String(err) });
-  }
+        if (req.method === "POST") {
+            const body = await readBody(req);
+            const data = await callUpstream(body);
+            return res.status(data.ok ? 200 : 400).json(data);
+        }
+
+        return res.status(405).json({ ok: false, msg: "Method not allowed" });
+    } catch (err) {
+        return res.status(502).json({ ok: false, msg: err.message || "Upstream request failed" });
+    }
 }

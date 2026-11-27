@@ -1,17 +1,28 @@
 // src/App.jsx
-import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import React, { Suspense, lazy, useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navigation from "./components/navbar/Navigation";
+import LoadingSpinner from "./components/Loading/LoadingSpinner";
+import { cn } from "@/lib/utils";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import LandingPage from "./pages/LandingPage";
-import HomePage from "./pages/Home/home";
 
-import UploadPage from "./pages/upload/UploadPage";
-import FilesPage from "./pages/files/FilesPage";
-import MyUploadsPage from "./pages/files/MyUploadsPage";
-import Profile from "./pages/profile/Profile";
+// Signed-in pages load on demand so the login and signup pages ship without them.
+const HomePage = lazy(() => import("./pages/Home/home"));
+const UploadPage = lazy(() => import("./pages/upload/UploadPage"));
+const FilesPage = lazy(() => import("./pages/files/FilesPage"));
+const MyUploadsPage = lazy(() => import("./pages/files/MyUploadsPage"));
+const Profile = lazy(() => import("./pages/profile/Profile"));
+
+function PageFallback() {
+    return (
+        <div className="page-fallback" role="status" aria-live="polite">
+            <LoadingSpinner size="md" message="Loading…" />
+        </div>
+    );
+}
 
 // Protected = requires auth
 function ProtectedRoute({ children }) {
@@ -27,6 +38,12 @@ function PublicRoute({ children }) {
 
 function AppRoutes() {
   const [auth, setAuth] = useState(null);
+  const location = useLocation();
+
+  // Each new page starts at the top (instant; smooth scrolling is for in-page jumps)
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [location.pathname]);
 
   useEffect(() => {
     const loadAuth = () => {
@@ -48,6 +65,8 @@ function AppRoutes() {
         <Navigation userName={auth.username || ""} userEmail={auth.email || ""} />
       )}
 
+      <div key={location.pathname} className={cn("page-enter", isLoggedIn && "pb-24 md:pb-0 md:transition-[padding] md:duration-300 md:ease-out", isLoggedIn && "md:pl-[var(--sidebar-w,18rem)]")}>
+      <Suspense fallback={<PageFallback />}>
       <Routes>
         {/* Public landing */}
         <Route
@@ -126,6 +145,8 @@ function AppRoutes() {
         {/* Fallback: send logged-in users to /home, others to landing */}
         <Route path="*" element={<Navigate to={isLoggedIn ? "/home" : "/"} replace />} />
       </Routes>
+      </Suspense>
+      </div>
     </>
   );
 }
@@ -137,3 +158,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+

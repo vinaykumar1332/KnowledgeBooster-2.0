@@ -4,7 +4,7 @@
     min-height: 100vh;
     background: var(--kh-bg);
     color: var(--kh-text);
-    padding-top: 96px;
+    padding-top: 0;
     overflow-x: hidden;
     font-family: var(--kh-font-body);
 }
@@ -20,8 +20,8 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    min-height: 70vh;
-    padding: 48px 20px 56px;
+    min-height: 52vh;
+    padding: 40px 20px 48px;
     isolation: isolate;
 }
 
@@ -44,13 +44,13 @@
 }
 
 .hero-eyebrow {
-    font-size: 12px;
-    letter-spacing: 0.24em;
+    font-size: 11px;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--kh-text-muted);
     border: 1px solid var(--kh-border);
     padding: 6px 12px;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
     animation: fade-in 0.8s ease both;
 }
 
@@ -61,7 +61,7 @@
     gap: 10px;
     font-family: var(--kh-font-display);
     font-weight: 800;
-    font-size: clamp(38px, 8vw, 92px);
+    font-size: clamp(30px, 4.6vw, 60px);
     line-height: 1.02;
     letter-spacing: -0.02em;
     margin: 0 0 24px;
@@ -99,10 +99,10 @@
 
 .hero-sub {
     max-width: 620px;
-    font-size: clamp(16px, 2vw, 19px);
+    font-size: clamp(14px, 1.2vw, 16px);
     line-height: 1.6;
     color: var(--kh-text-muted);
-    margin: 0 0 32px;
+    margin: 0 0 24px;
     animation: fade-in 1s 0.5s ease both;
 }
 
@@ -144,7 +144,7 @@
 .stat-counter-value {
     font-family: var(--kh-font-display);
     font-weight: 800;
-    font-size: clamp(28px, 5vw, 48px);
+    font-size: clamp(22px, 2.6vw, 32px);
     font-variant-numeric: tabular-nums;
     line-height: 1;
 }
@@ -169,13 +169,13 @@
 .home-section {
     max-width: 1180px;
     margin: 0 auto;
-    padding: 64px 20px 8px;
+    padding: 48px 20px 8px;
 }
 
 .section-title {
     font-family: var(--kh-font-display);
     font-weight: 800;
-    font-size: clamp(24px, 3.5vw, 36px);
+    font-size: clamp(20px, 2.2vw, 28px);
     margin: 0 0 28px;
     letter-spacing: -0.01em;
 }
@@ -313,8 +313,8 @@
 /* ============================================ */
 
 .cta-band {
-    margin: 72px 20px 0;
-    padding: 56px 24px;
+    margin: 56px 20px 0;
+    padding: 44px 24px;
     text-align: center;
     background: var(--kh-text);
     color: var(--kh-bg);
@@ -323,7 +323,7 @@
 .cta-title {
     font-family: var(--kh-font-display);
     font-weight: 800;
-    font-size: clamp(26px, 4vw, 40px);
+    font-size: clamp(20px, 2.4vw, 30px);
     margin: 0 0 12px;
     color: inherit;
 }
@@ -378,7 +378,7 @@
 /* ============================================ */
 
 @keyframes rise {
-    from { opacity: 0; transform: translateY(40px); }
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: none; }
 }
 
@@ -465,4 +465,14 @@
         opacity: 1;
         transform: none;
     }
+}
+
+/* Shared 5px corners for landing page surfaces */
+.hero-eyebrow,
+.hero-brand,
+.step-card,
+.feature-card,
+.feature-badge,
+.cta-band {
+    border-radius: var(--kh-radius);
 }

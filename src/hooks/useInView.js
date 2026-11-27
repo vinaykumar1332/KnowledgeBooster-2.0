@@ -1,21 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 
+const canObserve = () => typeof IntersectionObserver !== "undefined";
+
 /**
  * Reports whether an element has entered the viewport.
+ * Without IntersectionObserver (very old browsers) content is shown immediately.
  * @param {{ threshold?: number, once?: boolean }} options
  * @returns {[React.RefObject, boolean]}
  */
 export function useInView({ threshold = 0.15, once = true } = {}) {
     const ref = useRef(null);
-    const [inView, setInView] = useState(false);
+    const [inView, setInView] = useState(() => !canObserve());
 
     useEffect(() => {
         const el = ref.current;
-        if (!el) return undefined;
-        if (typeof IntersectionObserver === "undefined") {
-            setInView(true);
-            return undefined;
-        }
+        if (!el || !canObserve()) return undefined;
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {

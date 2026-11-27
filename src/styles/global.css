@@ -1,8 +1,10 @@
 @import "./variables.css";
 
+/* Science Gothic, converted to WOFF2 (about 50 KB each instead of 200 KB TTF).
+   font-display: swap shows text immediately in a fallback font while the file loads. */
 @font-face {
     font-family: "Science Gothic";
-    src: url("/fonts/Science_Gothic/static/ScienceGothic-Light.ttf") format("woff2");
+    src: url("/fonts/Science_Gothic/woff2/ScienceGothic-Regular.woff2") format("woff2");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -10,8 +12,24 @@
 
 @font-face {
     font-family: "Science Gothic";
-    src: url("/fonts/Science_Gothic/static/ScienceGothic-Bold.ttf") format("woff2");
+    src: url("/fonts/Science_Gothic/woff2/ScienceGothic-SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Science Gothic";
+    src: url("/fonts/Science_Gothic/woff2/ScienceGothic-Bold.woff2") format("woff2");
     font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Science Gothic";
+    src: url("/fonts/Science_Gothic/woff2/ScienceGothic-ExtraBold.woff2") format("woff2");
+    font-weight: 800;
     font-style: normal;
     font-display: swap;
 }

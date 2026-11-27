@@ -24,6 +24,19 @@
     <meta name="twitter:description" content="Discover, share, and collaborate on educational resources." />
     <meta name="twitter:image" content="https://www.your-domain.com/images/twitter-share-image.jpg" />
 
+      <script>
+      // Apply the saved theme before first paint so dark mode never flashes white
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          if (t !== "light" && t !== "dark") {
+            t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
+          document.documentElement.setAttribute("data-theme", t);
+          if (t === "dark") document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
