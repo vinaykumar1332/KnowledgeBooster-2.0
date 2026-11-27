@@ -12,7 +12,7 @@ export default function YouTubeSuggestions({ query }) {
 
     useEffect(() => {
         const q = (query || "").trim();
-        if (!q) { setItems([]); setLoading(false); return; }
+        if (!q) return;
 
         setLoading(true);
         clearTimeout(timerRef.current);
@@ -23,7 +23,7 @@ export default function YouTubeSuggestions({ query }) {
                 })
                 .catch(() => setItems([]))
                 .finally(() => setLoading(false));
-        }, 600); // debounce – don't fire on every keystroke
+        }, 600);
 
         return () => clearTimeout(timerRef.current);
     }, [query]);
@@ -34,8 +34,8 @@ export default function YouTubeSuggestions({ query }) {
         <>
             <section className="mt-8">
                 <div className="mb-3 flex items-center gap-2">
-                    <span className="grid size-6 place-items-center rounded-sm bg-[#ff0000]">
-                        <PlayCircleIcon className="size-3.5 text-white" aria-hidden="true" />
+                    <span className="grid size-6 place-items-center rounded-sm" style={{ background: "var(--yt-brand)" }}>
+                        <PlayCircleIcon className="size-3.5" style={{ color: "var(--yt-brand-fg)" }} aria-hidden="true" />
                     </span>
                     <h2 className="m-0 text-sm font-bold text-foreground">YouTube suggestions</h2>
                     <span className="text-xs text-muted-foreground">for "{query}"</span>
@@ -92,7 +92,7 @@ export default function YouTubeSuggestions({ query }) {
                                             </span>
                                             {/* Duration badge */}
                                             {video.duration && (
-                                                <span className="absolute right-2 bottom-2 rounded-md bg-black/85 px-1.5 py-0.5 text-[11px] font-bold text-white">
+                                                <span className="absolute right-2 bottom-2 rounded-md px-1.5 py-0.5 text-[11px] font-bold" style={{ background: "var(--video-bg)", color: "var(--yt-brand-fg)" }}>
                                                     {video.duration}
                                                 </span>
                                             )}
@@ -164,10 +164,10 @@ function VideoModal({ video, onClose }) {
             role="dialog"
             aria-modal="true"
             aria-label={video.title}
-            style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, width: "100%", height: "100dvh", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem", background: "rgba(0,0,0,0.80)", overflowY: "auto" }}
+            style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, width: "100%", height: "100dvh", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem", background: "var(--overlay-bg)", overflowY: "auto" }}
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
-            <div style={{ width: "100%", maxWidth: "56rem", display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: "0.5rem", background: "var(--background)", border: "1px solid var(--border)", boxShadow: "0 25px 50px rgba(0,0,0,0.5)" }}>
+            <div style={{ width: "100%", maxWidth: "56rem", display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: "0.5rem", background: "var(--background)", border: "0.0625rem solid var(--border)", boxShadow: "0 1.5rem 3rem var(--overlay-bg)" }}>
                 <div className="flex items-start justify-between gap-3 border-b border-border px-4 py-3">
                     <p className="m-0 text-sm font-semibold leading-snug text-foreground line-clamp-2">{video.title}</p>
                     <div className="flex shrink-0 items-center gap-1">
@@ -182,7 +182,7 @@ function VideoModal({ video, onClose }) {
                         </button>
                     </div>
                 </div>
-                <div style={{ position: "relative", paddingBottom: "56.25%", background: "#000" }}>
+                <div style={{ position: "relative", paddingBottom: "56.25%", background: "var(--video-bg)" }}>
                     <iframe
                         src={`${video.embedUrl}?autoplay=1&rel=0`}
                         title={video.title}

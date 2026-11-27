@@ -18,7 +18,6 @@ export const ROUTES = {
     UPLOAD:      "/upload",
     PROFILE:     "/profile",
     VIDEOS:      "/videos",
-    DISCOVER:    "/discover",
 };
 
 // ─────────────────────────────────────────────

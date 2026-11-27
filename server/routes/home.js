@@ -6,7 +6,7 @@ import { buildTaxonomy } from '../../lib/filesUpstream.js';
 const router = Router();
 
 /** GET /api/home */
-router.get('/', async (_req, res) => {
+router.get('/home', async (_req, res) => {
     try {
         const all = await loadFiles();
         const seenTitles = new Set();

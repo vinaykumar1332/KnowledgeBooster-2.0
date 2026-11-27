@@ -401,6 +401,13 @@ textarea:focus-visible {
 /*---break---
  */
 :root {
+    /* Brand tokens */
+    --yt-brand:      oklch(0.53 0.24 27);   /* YouTube red  #ff0000 approx */
+    --yt-brand-dark: oklch(0.42 0.22 27);   /* darker shade #cc0000 approx */
+    --yt-brand-fg:   oklch(1 0 0);          /* white text on YouTube red  */
+    --overlay-bg:    oklch(0 0 0 / 0.85);   /* modal backdrop             */
+    --video-bg:      oklch(0 0 0);          /* letterbox behind video     */
+
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
