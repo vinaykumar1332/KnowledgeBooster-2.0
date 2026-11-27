@@ -17,6 +17,10 @@ export const ENDPOINTS = {
         SEARCH: "/youtube/search",
     },
 
+    DISCOVER: {
+        SEARCH: "/discover/search",
+    },
+
     HOME: "/home",
     TAXONOMY: "/taxonomy",
     HEALTH: "/health",

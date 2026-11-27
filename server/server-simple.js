@@ -1,12 +1,3 @@
-import { createRequire } from 'module';
-import { fileURLToPath } from 'url';
-import { resolve, dirname } from 'path';
-const _require = createRequire(import.meta.url);
-const dotenv = _require('dotenv');
-const __dir = dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: resolve(__dir, '..', '.env') }); // root .env (shared secrets)
-dotenv.config({ path: resolve(__dir, '.env') });        // server/.env (overrides)
-
 import express from 'express';
 import cors from 'cors';
 import { AUTH_ACTIONS, callAuth } from '../lib/authUpstream.js';

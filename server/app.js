@@ -6,6 +6,7 @@ import authRouter from './routes/auth.js';
 import filesRouter from './routes/files.js';
 import homeRouter from './routes/home.js';
 import youtubeRouter from './routes/youtube.js';
+import discoverRouter from './routes/discover.js';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/files', filesRouter);
 app.use('/api', homeRouter);          // mounts /api/home and /api/taxonomy
 app.use('/api/youtube', youtubeRouter);
+app.use('/api/discover', discoverRouter);
 
 // 404 fallback
 app.use((req, res) => {
