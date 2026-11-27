@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import LandingPage from "./pages/LandingPage";
+import { ROUTES, STORAGE_KEYS, EVENTS } from "./constants";
 
 // Signed-in pages load on demand so the login and signup pages ship without them.
 const HomePage = lazy(() => import("./pages/Home/home"));
@@ -15,6 +16,7 @@ const UploadPage = lazy(() => import("./pages/upload/UploadPage"));
 const FilesPage = lazy(() => import("./pages/files/FilesPage"));
 const MyUploadsPage = lazy(() => import("./pages/files/MyUploadsPage"));
 const Profile = lazy(() => import("./pages/profile/Profile"));
+const YouTubePage = lazy(() => import("./pages/youtube/YouTubePage"));
 
 function PageFallback() {
     return (
@@ -24,16 +26,18 @@ function PageFallback() {
     );
 }
 
+function readAuth() {
+    try { return JSON.parse(sessionStorage.getItem(STORAGE_KEYS.AUTH) || "null"); } catch { return null; }
+}
+
 // Protected = requires auth
 function ProtectedRoute({ children }) {
-  const auth = JSON.parse(sessionStorage.getItem("auth") || "null");
-  return auth?.ok === true ? children : <Navigate to="/login" replace />;
+  return readAuth()?.ok === true ? children : <Navigate to={ROUTES.LOGIN} replace />;
 }
 
 // Public = only for unauthenticated users
 function PublicRoute({ children }) {
-  const auth = JSON.parse(sessionStorage.getItem("auth") || "null");
-  return auth?.ok === true ? <Navigate to="/home" replace /> : children;
+  return readAuth()?.ok === true ? <Navigate to={ROUTES.HOME} replace /> : children;
 }
 
 function AppRoutes() {
@@ -46,14 +50,10 @@ function AppRoutes() {
   }, [location.pathname]);
 
   useEffect(() => {
-    const loadAuth = () => {
-      const stored = sessionStorage.getItem("auth");
-      setAuth(stored ? JSON.parse(stored) : null);
-    };
-
+    const loadAuth = () => setAuth(readAuth());
     loadAuth();
-    window.addEventListener("authChange", loadAuth);
-    return () => window.removeEventListener("authChange", loadAuth);
+    window.addEventListener(EVENTS.AUTH_CHANGE, loadAuth);
+    return () => window.removeEventListener(EVENTS.AUTH_CHANGE, loadAuth);
   }, []);
 
   const isLoggedIn = auth?.ok === true;
@@ -68,82 +68,16 @@ function AppRoutes() {
       <div key={location.pathname} className={cn("page-enter", isLoggedIn && "pb-24 md:pb-0 md:transition-[padding] md:duration-300 md:ease-out", isLoggedIn && "md:pl-[var(--sidebar-w,18rem)]")}>
       <Suspense fallback={<PageFallback />}>
       <Routes>
-        {/* Public landing */}
-        <Route
-          path="/"
-          element={
-            <PublicRoute>
-              <LandingPage />
-            </PublicRoute>
-          }
-        />
-
-        {/* Auth pages */}
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <PublicRoute>
-              <Signup />
-            </PublicRoute>
-          }
-        />
-
-        {/* Protected pages */}
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <HomePage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/upload"
-          element={
-            <ProtectedRoute>
-              <UploadPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/files"
-          element={
-            <ProtectedRoute>
-              <FilesPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/my-uploads"
-          element={
-            <ProtectedRoute>
-              <MyUploadsPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Fallback: send logged-in users to /home, others to landing */}
-        <Route path="*" element={<Navigate to={isLoggedIn ? "/home" : "/"} replace />} />
+        <Route path={ROUTES.LANDING}    element={<PublicRoute><LandingPage /></PublicRoute>} />
+        <Route path={ROUTES.LOGIN}     element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path={ROUTES.SIGNUP}    element={<PublicRoute><Signup /></PublicRoute>} />
+        <Route path={ROUTES.HOME}      element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+        <Route path={ROUTES.PROFILE}   element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path={ROUTES.UPLOAD}    element={<ProtectedRoute><UploadPage /></ProtectedRoute>} />
+        <Route path={ROUTES.FILES}     element={<ProtectedRoute><FilesPage /></ProtectedRoute>} />
+        <Route path={ROUTES.MY_UPLOADS} element={<ProtectedRoute><MyUploadsPage /></ProtectedRoute>} />
+        <Route path={ROUTES.VIDEOS}    element={<ProtectedRoute><YouTubePage /></ProtectedRoute>} />
+        <Route path="*" element={<Navigate to={isLoggedIn ? ROUTES.HOME : ROUTES.LANDING} replace />} />
       </Routes>
       </Suspense>
       </div>

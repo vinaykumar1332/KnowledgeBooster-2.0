@@ -1,6 +1,7 @@
 // src/services/authService.js
-// Names the auth endpoints. Request formats for Apps Script live on the server.
 import { api } from "./apiClient";
+import { ENDPOINTS } from "../config/endpoints";
+import { trimmed } from "../utils/sanitize";
 
 /** Flatten the server response into the shape the UI stores in sessionStorage. */
 function toSession(data) {
@@ -16,17 +17,22 @@ function toSession(data) {
 
 export async function login({ email, password }) {
     return toSession(
-        await api.post("/auth", { script: "AUTH", action: "login", email: email.trim(), password })
+        await api.post(ENDPOINTS.AUTH.ROOT, {
+            script: "AUTH",
+            action: "login",
+            email: trimmed(email),
+            password,
+        })
     );
 }
 
 export async function signup({ username, email, password, confirmPassword, userType }) {
     return toSession(
-        await api.post("/auth", {
+        await api.post(ENDPOINTS.AUTH.ROOT, {
             script: "AUTH",
             action: "signup",
-            username,
-            email: email.trim(),
+            username: trimmed(username),
+            email: trimmed(email),
             password,
             confirmPassword,
             userType,
