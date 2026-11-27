@@ -1,0 +1,32 @@
+/* Theme toggle. The same .kh-theme-toggle class is styled in Navigation.css for the app bar. */
+.kh-theme-toggle {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--kh-text);
+    border: 1px solid var(--kh-border);
+    border-radius: 0;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.kh-theme-toggle:hover {
+    transform: translateY(-2px);
+    border-color: var(--kh-accent);
+}
+
+.kh-theme-toggle:focus-visible {
+    outline: 2px solid var(--kh-accent);
+    outline-offset: 2px;
+}
+
+.kh-theme-toggle svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    color: currentColor;
+    stroke: currentColor;
+}

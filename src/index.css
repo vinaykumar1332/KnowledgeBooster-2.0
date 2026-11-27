@@ -1,0 +1,334 @@
+/**
+ * Global Styles
+ * Base styles and imports for KnowledgeHub
+ */
+
+/* Import theme variables */
+@import './styles/variables.css';
+
+/* Import responsive styles */
+@import './styles/responsive.css';
+
+/* Import global styles */
+@import './styles/global.css';
+
+/* ============================================ */
+/* GLOBAL RESETS & DEFAULTS                    */
+/* ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--kh-font-body);
+    background-color: var(--kh-bg);
+    color: var(--kh-text);
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ============================================ */
+/* TEXT & TYPOGRAPHY                           */
+/* ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--kh-font-display);
+    font-weight: var(--kh-font-weight-bold);
+    color: var(--kh-accent);
+    margin: 1.5em 0 0.5em 0;
+}
+
+p {
+    color: var(--kh-text);
+    margin-bottom: 1em;
+}
+
+a {
+    color: var(--kh-accent);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
+/* ============================================ */
+/* FORMS & INPUTS                              */
+/* ============================================ */
+
+input, textarea, select {
+    font-family: inherit;
+    font-size: 1em;
+    color: var(--kh-text);
+    background-color: var(--kh-surface);
+    border: 1px solid var(--kh-border);
+    border-radius: var(--kh-radius);
+    padding: 0.75em;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--kh-accent);
+    background-color: var(--kh-surface);
+}
+
+input:disabled, textarea:disabled, select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+input.input-error {
+    border-color: var(--kh-danger-text);
+    background-color: var(--kh-danger-bg);
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-weight: var(--kh-font-weight-bold);
+    color: var(--kh-text);
+}
+
+/* ============================================ */
+/* BUTTONS & ACTIONS                           */
+/* ============================================ */
+
+button, .btn {
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: var(--kh-font-weight-bold);
+    border: none;
+    border-radius: var(--kh-radius);
+    padding: 0.75em 1.5em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background-color: var(--kh-accent);
+    color: var(--kh-accent-contrast);
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background-color: var(--kh-surface);
+    color: var(--kh-text);
+    border: 1px solid var(--kh-border);
+}
+
+.btn-secondary:hover {
+    background-color: var(--kh-surface-hover);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ============================================ */
+/* CARDS & CONTAINERS                          */
+/* ============================================ */
+
+.card {
+    background-color: var(--kh-surface);
+    border: 1px solid var(--kh-border);
+    border-radius: var(--kh-radius);
+    padding: var(--kh-space);
+    transition: all 0.2s ease;
+}
+
+.card:hover {
+    background-color: var(--kh-surface-hover);
+}
+
+/* ============================================ */
+/* STATUS MESSAGES                             */
+/* ============================================ */
+
+.msg {
+    padding: 12px 16px;
+    border-radius: var(--kh-radius);
+    margin-top: 16px;
+    font-weight: 500;
+    animation: slideIn 0.3s ease;
+}
+
+.msg.success {
+    background-color: var(--kh-success-bg);
+    color: var(--kh-success-text);
+    border: 1px solid var(--kh-success-border);
+}
+
+.msg.error {
+    background-color: var(--kh-danger-bg);
+    color: var(--kh-danger-text);
+    border: 1px solid var(--kh-danger-border);
+}
+
+/* ============================================ */
+/* LOADING & SKELETON                          */
+/* ============================================ */
+
+.skeleton {
+    animation: skeleton-loading 1s linear infinite alternate;
+}
+
+.skeleton-line {
+    height: 12px;
+    background-color: var(--kh-border);
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.skeleton-line.short {
+    width: 60%;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-color: var(--kh-surface);
+    }
+    100% {
+        background-color: var(--kh-surface-hover);
+    }
+}
+
+/* ============================================ */
+/* ANIMATIONS                                  */
+/* ============================================ */
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================ */
+/* UTILITY CLASSES                             */
+/* ============================================ */
+
+.full-width {
+    width: 100%;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: var(--kh-text-muted);
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.opacity-50 {
+    opacity: 0.5;
+}
+
+.gap-1 { gap: 8px; }
+.gap-2 { gap: 12px; }
+.gap-3 { gap: 16px; }
+
+/* ============================================ */
+/* SCROLLBAR STYLING                           */
+/* ============================================ */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--kh-surface);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--kh-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--kh-text-muted);
+}
+
+/* ============================================ */
+/* FOCUS VISIBLE (Keyboard Navigation)         */
+/* ============================================ */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--kh-accent);
+    outline-offset: 2px;
+}
+
+/* ============================================ */
+/* PRINT STYLES                                */
+/* ============================================ */
+
+@media print {
+    body {
+        background-color: white;
+        color: black;
+    }
+
+    button, .btn {
+        display: none;
+    }
+}

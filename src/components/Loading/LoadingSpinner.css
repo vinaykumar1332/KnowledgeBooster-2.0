@@ -1,0 +1,268 @@
+/**
+ * Loading Spinner Component Styles
+ * Multiple loading animation variants
+ */
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    color: var(--kh-accent);
+    padding: 24px;
+    text-align: center;
+}
+
+/* ============================================ */
+/* FULLSCREEN OVERLAY                          */
+/* ============================================ */
+
+.loading-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+
+    animation: fadeIn 0.2s ease;
+}
+
+.loading-fullscreen .loading-spinner {
+    background-color: var(--kh-surface);
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    min-width: 200px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ============================================ */
+/* SIZES                                       */
+/* ============================================ */
+
+.loading-sm {
+    --size: 24px;
+}
+
+.loading-md {
+    --size: 48px;
+}
+
+.loading-lg {
+    --size: 64px;
+}
+
+/* ============================================ */
+/* SPINNER VARIANT                             */
+/* ============================================ */
+
+.loading-spinner svg {
+    width: var(--size);
+    height: var(--size);
+    display: block;
+}
+
+.loading-circle {
+    animation: spin 1s linear infinite;
+    transform-origin: center;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================ */
+/* DOTS VARIANT                                */
+/* ============================================ */
+
+.loading-dots {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.loading-dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--kh-accent);
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dots .dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.loading-dots .dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Responsive dots */
+.loading-sm .loading-dots .dot {
+    width: 6px;
+    height: 6px;
+}
+
+.loading-lg .loading-dots .dot {
+    width: 14px;
+    height: 14px;
+}
+
+/* ============================================ */
+/* BAR VARIANT                                 */
+/* ============================================ */
+
+.loading-bar {
+    width: 200px;
+    height: 4px;
+    background-color: var(--kh-border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.loading-bar .bar-fill {
+    height: 100%;
+    background-color: var(--kh-accent);
+    animation: fillBar 2s infinite ease-in-out;
+    border-radius: 2px;
+}
+
+@keyframes fillBar {
+    0% {
+        width: 0;
+    }
+    50% {
+        width: 100%;
+    }
+    100% {
+        width: 0;
+    }
+}
+
+/* ============================================ */
+/* MESSAGE                                     */
+/* ============================================ */
+
+.loading-message {
+    font-size: 0.95em;
+    color: var(--kh-text-muted);
+    margin: 0;
+    animation: fadeIn 0.3s ease 0.2s both;
+}
+
+/* ============================================ */
+/* SKELETON LOADER                             */
+/* ============================================ */
+
+.skeleton-loader {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.skeleton-item {
+    background: linear-gradient(
+        90deg,
+        var(--kh-surface-hover) 25%,
+        var(--kh-border) 50%,
+        var(--kh-surface-hover) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--kh-radius);
+}
+
+.skeleton-card {
+    height: 150px;
+    border-radius: 8px;
+}
+
+.skeleton-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.skeleton-text {
+    padding: 8px;
+}
+
+.skeleton-line {
+    height: 12px;
+    background-color: var(--kh-border);
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.skeleton-line:last-child {
+    margin-bottom: 0;
+}
+
+.skeleton-line.short {
+    width: 60%;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ============================================ */
+/* RESPONSIVE                                  */
+/* ============================================ */
+
+@media (max-width: 767px) {
+    .loading-fullscreen .loading-spinner {
+        padding: 32px;
+        margin: 0 16px;
+    }
+
+    .loading-bar {
+        width: 150px;
+    }
+}
+
+/* ============================================ */
+/* DARK MODE                                   */
+/* ============================================ */
+
+[data-theme="dark"] .loading-spinner {
+    color: var(--kh-accent);
+}
+
+[data-theme="dark"] .loading-fullscreen .loading-spinner {
+    background-color: var(--kh-surface);
+}

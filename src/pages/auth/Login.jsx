@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import ToastNotification from "../../components/toast/ToastNotification";
-import { API_CONFIG } from "../../config/Api.config"; // your config (contains PROXY_URL etc)
+import { login } from "../../services/authService";
 import "./login.css";
 
 export default function Login() {
@@ -23,23 +23,13 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const res = await fetch(API_CONFIG.AUTH_URL, {
-                method: "POST",
-                headers: API_CONFIG.HEADERS,
-                body: JSON.stringify({
-                    script: "AUTH",
-                    action: "login",
-                    email: email.trim(),
-                    password,
-                }),
-            });
-            const data = await res.json().catch(() => ({ ok: false, msg: "Invalid server response" }));
+            const data = await login({ email, password });
 
             if (!data.ok) {
                 showToast(data.msg || "Invalid credentials");
                 return;
             }
-            sessionStorage.setItem("auth", JSON.stringify(data));
+            sessionStorage.setItem("auth", JSON.stringify({ ok: true, token: data.token, username: data.username, email: data.email }));
             window.dispatchEvent(new Event("authChange"));
 
             showToast("Login successful!", "success");

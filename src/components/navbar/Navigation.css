@@ -283,6 +283,10 @@
 
 .kh-theme-toggle svg {
     display: block;
+    width: 18px;
+    height: 18px;
+    color: var(--kh-text);
+    stroke: currentColor;
     transition: opacity .25s ease, transform .25s ease;
 }
 

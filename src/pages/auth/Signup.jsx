@@ -4,7 +4,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import ToastNotification from "../../components/toast/ToastNotification";
-import { API_CONFIG } from "../../config/Api.config";
+import { signup } from "../../services/authService";
 import "./login.css";
 
 export default function Signup() {
@@ -60,20 +60,12 @@ export default function Signup() {
         setLoading(true);
 
         try {
-            const res = await fetch(API_CONFIG.AUTH_URL, {
-                method: "POST",
-                headers: API_CONFIG.HEADERS,
-                body: JSON.stringify({
-                    script: "AUTH",
-                    action: "signup",
-                    username: form.username.trim(),
-                    email: form.email.trim().toLowerCase(),
-                    password: form.password,
-                    userType: form.userType,
-                }),
+            const data = await signup({
+                username: form.username.trim(),
+                email: form.email.trim().toLowerCase(),
+                password: form.password,
+                confirmPassword: form.confirmPassword ?? form.password,
             });
-
-            const data = await res.json();
 
             if (!data.ok) {
                 showToast(data.msg || data.message || "Signup failed");

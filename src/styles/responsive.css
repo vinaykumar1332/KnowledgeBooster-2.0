@@ -1,0 +1,438 @@
+/**
+ * Responsive Design Styles
+ * Mobile-first approach with breakpoints:
+ * - Mobile: 320px - 767px
+ * - Tablet: 768px - 1023px
+ * - Desktop: 1024px+
+ */
+
+/* ============================================ */
+/* BASE / MOBILE STYLES (320px+)               */
+/* ============================================ */
+
+:root {
+    --mobile-padding: 12px;
+    --tablet-padding: 16px;
+    --desktop-padding: 24px;
+    --breakpoint-tablet: 768px;
+    --breakpoint-desktop: 1024px;
+    --breakpoint-wide: 1440px;
+}
+
+html, body {
+    font-size: 14px;
+}
+
+/* Container sizing */
+.container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 var(--mobile-padding);
+}
+
+/* Grid layouts - mobile stacking */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.grid-2 {
+    grid-template-columns: 1fr;
+}
+
+.grid-3 {
+    grid-template-columns: 1fr;
+}
+
+.grid-4 {
+    grid-template-columns: 1fr;
+}
+
+/* Flex layouts */
+.flex {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.flex-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+/* Buttons - tap friendly (min 44px height) */
+button, .btn {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Forms - full width on mobile */
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    border-radius: 4px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+/* Typography - scaled for mobile */
+h1 {
+    font-size: 24px;
+    margin: 16px 0 8px 0;
+}
+
+h2 {
+    font-size: 20px;
+    margin: 12px 0 8px 0;
+}
+
+h3 {
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+p {
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+/* Cards - full width */
+.card {
+    width: 100%;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+/* Navigation - mobile menu */
+nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+nav a {
+    padding: 12px;
+    display: block;
+}
+
+/* Search/Filter - stacked */
+.search-wrap, .filter-wrap {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+/* File grid - single column */
+.files-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+/* ============================================ */
+/* TABLET STYLES (768px+)                     */
+/* ============================================ */
+
+@media (min-width: 768px) {
+    :root {
+        --current-padding: var(--tablet-padding);
+    }
+
+    html, body {
+        font-size: 15px;
+    }
+
+    .container {
+        padding: 0 var(--tablet-padding);
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    /* Grid layouts - 2 columns */
+    .grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Navigation - horizontal */
+    nav {
+        flex-direction: row;
+        gap: 8px;
+    }
+
+    /* Search/Filter - side by side */
+    .search-wrap {
+        flex: 1;
+    }
+
+    .filter-wrap {
+        flex: 1;
+    }
+
+    .files-header {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    /* File grid - 2 columns */
+    .files-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    /* Home carousel - better spacing */
+    .home-carousel {
+        gap: 16px;
+    }
+
+    /* Forms - better layout */
+    .upload-form {
+        max-width: 500px;
+    }
+}
+
+/* ============================================ */
+/* DESKTOP STYLES (1024px+)                    */
+/* ============================================ */
+
+@media (min-width: 1024px) {
+    :root {
+        --current-padding: var(--desktop-padding);
+    }
+
+    html, body {
+        font-size: 16px;
+    }
+
+    .container {
+        padding: 0 var(--desktop-padding);
+        max-width: 1200px;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    /* Grid layouts - 3+ columns */
+    .grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* File grid - 3 columns */
+    .files-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    /* Files page layout - sidebar + content */
+    .files-page {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 24px;
+    }
+
+    .files-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    /* Forms - max width */
+    .upload-form {
+        max-width: 600px;
+    }
+
+    /* Navigation - full horizontal */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 24px;
+    }
+}
+
+/* ============================================ */
+/* WIDE/4K STYLES (1440px+)                    */
+/* ============================================ */
+
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1400px;
+    }
+
+    /* File grid - 4 columns */
+    .files-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .files-page {
+        grid-template-columns: 280px 1fr;
+    }
+}
+
+/* ============================================ */
+/* RESPONSIVE UTILITIES                        */
+/* ============================================ */
+
+/* Show/hide by breakpoint */
+.hide-mobile {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .hide-tablet-up {
+        display: none;
+    }
+
+    .hide-mobile {
+        display: block;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hide-desktop-up {
+        display: none;
+    }
+}
+
+/* Text sizes - responsive */
+.text-sm {
+    font-size: 12px;
+}
+
+.text-md {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    .text-md {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .text-md {
+        font-size: 16px;
+    }
+}
+
+/* Spacing - responsive */
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 12px; }
+.mb-3 { margin-bottom: 16px; }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 12px; }
+.mt-3 { margin-top: 16px; }
+
+@media (min-width: 768px) {
+    .mb-1 { margin-bottom: 12px; }
+    .mb-2 { margin-bottom: 16px; }
+    .mb-3 { margin-bottom: 24px; }
+    .mt-1 { margin-top: 12px; }
+    .mt-2 { margin-top: 16px; }
+    .mt-3 { margin-top: 24px; }
+}
+
+/* ============================================ */
+/* LANDSCAPE ORIENTATION                       */
+/* ============================================ */
+
+@media (orientation: landscape) and (max-height: 500px) {
+    h1, h2 {
+        font-size: 18px;
+        margin: 8px 0;
+    }
+
+    button, .btn {
+        min-height: 36px;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}
+
+/* ============================================ */
+/* TOUCH DEVICE OPTIMIZATIONS                  */
+/* ============================================ */
+
+@media (hover: none) and (pointer: coarse) {
+    /* Increase touch targets */
+    button, .btn, a {
+        min-height: 48px;
+        min-width: 48px;
+    }
+
+    /* Better spacing for touch */
+    .file-card {
+        margin-bottom: 12px;
+    }
+
+    /* Remove hover effects that don't work on touch */
+    button:hover {
+        background-color: initial;
+    }
+}
+
+/* ============================================ */
+/* DARK MODE RESPONSIVE ADJUSTMENTS            */
+/* ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    /* Adjust spacing/sizing if needed for dark mode */
+    /* Base dark mode is handled in variables.css */
+}
+
+/* ============================================ */
+/* PRINT STYLES                                */
+/* ============================================ */
+
+@media print {
+    .upload-fab,
+    button,
+    .navbar,
+    .filter-wrap,
+    .search-wrap {
+        display: none;
+    }
+
+    .files-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

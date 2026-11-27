@@ -5,9 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:backend:simple": "npm --prefix server run dev:simple",
+    "dev:backend:full": "npm --prefix server run dev",
+    "dev:frontend": "vite",
+    "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:backend:simple\"",
+    "dev:full": "concurrently \"npm run dev:frontend\" \"npm run dev:backend:simple\"",
+    "start": "concurrently \"npm run dev:frontend\" \"npm run dev:backend:simple\"",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "setup": "npm install && cd server && npm install && cd .. && echo ✅ Setup complete!"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
@@ -24,6 +31,7 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "concurrently": "^8.2.2",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",

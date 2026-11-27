@@ -1,33 +1,31 @@
 // src/pages/LandingPage.jsx
+// Public page for visitors who are not logged in. Shares the landing content with /home.
 import React from "react";
-import "./Home/home.css"
+import { Link } from "react-router-dom";
+import HomePage from "./Home/home";
+import ThemeToggle from "../components/theme/ThemeToggle";
+import { UI_CONFIG } from "../config/ui.config";
+import "./LandingPage.css";
 
 export default function LandingPage() {
+    const L = UI_CONFIG.LANDING;
     return (
-        <div className="min-h-screen bg-gray-50 landing-page">
-            {/* Hero Section */}
-            <div className="max-w-5xl mx-auto text-center pt-28 pb-20 px-6 wrapper-landing">
-                <h1 className="text-5xl font-bold text-gray-800 mb-6">
-                    Welcome to <span className="text-blue-600">KnowledgeHub</span>
-                </h1>
-                <p className="text-xl text-gray-600 mb-12">
-                    Learn together. Grow together. Thrive forever
-                </p>
-                <div className="landing-page-svg">
-                    <img src="./images/Common_image/Landing-page.svg"></img>
+        <>
+            <header className="guest-bar">
+                <Link to="/" className="guest-brand">
+                    KnowledgeHub
+                </Link>
+                <div className="guest-actions">
+                    <Link to="/login" className="guest-link">
+                        {L.GUEST_LOGIN}
+                    </Link>
+                    <Link to="/signup" className="btn btn-primary guest-signup">
+                        {L.GUEST_SIGNUP}
+                    </Link>
+                    <ThemeToggle />
                 </div>
-                <div className="actions-btns">
-                    <button className="btn-primary btn">   <a href="/login" className="btn-text">
-                        Login
-                    </a></button>
-                    <button className="btn-secondary btn">
-                        <a href="/signup" className="btn-text">
-                            Sign UP
-                        </a>
-                    </button>
-                </div>
-            </div>
-            {/* Features, etc. */}
-        </div>
+            </header>
+            <HomePage guest />
+        </>
     );
 }

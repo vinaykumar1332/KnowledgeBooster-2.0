@@ -2,7 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { FiMoon, FiSun, FiMenu, FiX, FiUpload, FiHome, FiFileText, FiLogOut, FiUser } from "react-icons/fi";
+import { FiMenu, FiX, FiUpload, FiHome, FiFileText, FiLogOut, FiUser } from "react-icons/fi";
+import ThemeToggle from "../theme/ThemeToggle";
 import "./Navigation.css";
 
 export default function Navigation({
@@ -12,18 +13,6 @@ export default function Navigation({
 }) {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
-    const getInitialTheme = () => {
-        try {
-            const stored = localStorage.getItem("theme");
-            if (stored === "light" || stored === "dark") return stored;
-        } catch (_) { }
-        return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light";
-    };
-    const [theme, setTheme] = useState(getInitialTheme);
-    const [isAnimatingIcon, setIsAnimatingIcon] = useState(false);
-    const animationTimer = useRef(null);
 
     // local state for name/email (fallback to sessionStorage)
     const [userName, setUserName] = useState(initialUserName);
@@ -50,13 +39,6 @@ export default function Navigation({
         }
     }, [initialUserName, initialUserEmail]);
 
-    useEffect(() => {
-        document.documentElement.setAttribute("data-theme", theme);
-        try {
-            localStorage.setItem("theme", theme);
-        } catch (_) { }
-    }, [theme]);
-
     // close overlays on outside click
     useEffect(() => {
         const onDocClick = (e) => {
@@ -72,12 +54,6 @@ export default function Navigation({
         const onKey = (e) => e.key === "Escape" && (setDrawerOpen(false), setProfileOpen(false));
         document.addEventListener("keydown", onKey);
         return () => document.removeEventListener("keydown", onKey);
-    }, []);
-
-    useEffect(() => {
-        return () => {
-            if (animationTimer.current) clearTimeout(animationTimer.current);
-        };
     }, []);
 
     // Ensure navigation closes overlays and logs for debug
@@ -154,22 +130,7 @@ export default function Navigation({
                     </nav>
 
                     <div className="kh-profile-wrap" ref={profileRef}>
-                        <button
-                            className={`kh-theme-toggle ${isAnimatingIcon ? "animate" : ""}`.trim()}
-                            type="button"
-                            onClick={() => {
-                                setIsAnimatingIcon(true);
-                                setTheme((t) => (t === "dark" ? "light" : "dark"));
-                                if (animationTimer.current) clearTimeout(animationTimer.current);
-                                animationTimer.current = setTimeout(() => {
-                                    setIsAnimatingIcon(false);
-                                }, 380);
-                            }}
-                            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-                            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-                        >
-                            {theme === "dark" ? <FiSun /> : <FiMoon />}
-                        </button>
+                        <ThemeToggle />
 
                         <button className="kh-avatar-btn" onClick={() => setProfileOpen((v) => !v)} type="button">
                             <div className="kh-avatar">{initialsFromName(userName)}</div>

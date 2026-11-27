@@ -1,0 +1,60 @@
+/* Top bar for the public landing page */
+.guest-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 20px;
+    background: var(--kh-bg);
+    border-bottom: 1px solid var(--kh-border);
+}
+
+.guest-brand {
+    font-family: var(--kh-font-display);
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    color: var(--kh-text);
+    text-decoration: none;
+}
+
+.guest-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.guest-link {
+    color: var(--kh-text);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px 10px;
+}
+
+.guest-link:hover {
+    text-decoration: underline;
+}
+
+.guest-signup {
+    padding: 8px 14px;
+    font-size: 14px;
+    text-decoration: none;
+    min-height: 40px;
+}
+
+@media (max-width: 479px) {
+    .guest-brand {
+        font-size: 16px;
+    }
+
+    .guest-link {
+        display: none;
+    }
+}
