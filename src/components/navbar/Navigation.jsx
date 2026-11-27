@@ -7,7 +7,6 @@ import { NavLink } from "react-router-dom";
 import {
     ChevronLeftIcon,
     ChevronRightIcon,
-    FolderUpIcon,
     HouseIcon,
     LibraryIcon,
     LogOutIcon,
@@ -26,12 +25,11 @@ import { cn } from "@/lib/utils";
 const N = UI_CONFIG.NAV;
 
 const NAV_ITEMS = [
-    { to: "/home", label: N.HOME, icon: HouseIcon },
-    { to: "/files", label: N.BROWSE, icon: LibraryIcon },
-    { to: "/upload", label: N.UPLOAD, icon: UploadIcon, primary: true },
-    { to: "/videos", label: "Videos", icon: PlayCircleIcon },
-    { to: "/my-uploads", label: N.MY_FILES, icon: FolderUpIcon },
-    { to: "/profile", label: N.PROFILE, icon: UserIcon },
+    { to: "/home",     label: N.HOME,    icon: HouseIcon },
+    { to: "/files",    label: N.BROWSE,  icon: LibraryIcon },
+    { to: "/upload",   label: N.UPLOAD,  icon: UploadIcon, primary: true },
+    { to: "/videos",   label: "Videos",  icon: PlayCircleIcon },
+    { to: "/profile",  label: N.PROFILE, icon: UserIcon },
 ];
 
 function readStoredAuth() {
@@ -216,7 +214,7 @@ export default function Navigation({ userName: nameProp = "", userEmail: emailPr
                     hidden && "translate-y-full"
                 )}
             >
-                <ul className="mx-auto m-0 grid h-16 max-w-lg list-none grid-cols-6 items-center p-0">
+                <ul className="mx-auto m-0 grid h-16 max-w-md list-none grid-cols-5 items-center p-0">
                     {NAV_ITEMS.map((item) => (
                         <li key={item.to} className="flex justify-center">
                             {item.primary ? (
@@ -308,9 +306,6 @@ function AccountMenu({ userName, userEmail, onLogout }) {
                     <div className="my-1 h-px bg-border" />
                     <NavLink role="menuitem" to="/profile" onClick={() => setOpen(false)} className={itemClass}>
                         <UserIcon className="size-4" aria-hidden="true" /> {N.PROFILE}
-                    </NavLink>
-                    <NavLink role="menuitem" to="/my-uploads" onClick={() => setOpen(false)} className={itemClass}>
-                        <FolderUpIcon className="size-4" aria-hidden="true" /> {N.MY_FILES}
                     </NavLink>
                     <div className="my-1 h-px bg-border" />
                     <button role="menuitem" type="button" onClick={onLogout} className={cn(itemClass, "bg-transparent p-0 px-3")}>
