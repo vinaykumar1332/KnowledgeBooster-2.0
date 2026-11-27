@@ -1,5 +1,5 @@
 import React from "react";
-import { FiMoon, FiSun } from "react-icons/fi";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../../hooks/useTheme";
 import { UI_CONFIG } from "../../config/ui.config";
 import "./ThemeToggle.css";
@@ -17,7 +17,7 @@ export default function ThemeToggle({ className = "" }) {
             aria-label={nextLabel}
             title={nextLabel}
         >
-            {theme === "dark" ? <FiSun aria-hidden="true" /> : <FiMoon aria-hidden="true" />}
+            {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </button>
     );
 }

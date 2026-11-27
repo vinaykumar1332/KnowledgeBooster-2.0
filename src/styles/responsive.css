@@ -23,55 +23,18 @@ html, body {
     font-size: 14px;
 }
 
-/* Container sizing */
-.container {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 var(--mobile-padding);
-}
-
-/* Grid layouts - mobile stacking */
-.grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-}
-
-.grid-2 {
-    grid-template-columns: 1fr;
-}
-
-.grid-3 {
-    grid-template-columns: 1fr;
-}
-
-.grid-4 {
-    grid-template-columns: 1fr;
-}
-
-/* Flex layouts */
-.flex {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.flex-row {
-    flex-direction: row;
-    flex-wrap: wrap;
-}
+/* Layout utilities (flex, grid, container) come from Tailwind; do not redefine them here. */
 
 /* Buttons - tap friendly (min 44px height) */
-button, .btn {
+.btn {
     min-height: 44px;
     padding: 10px 14px;
     font-size: 14px;
-    border-radius: 4px;
+    border-radius: var(--kh-radius);
     transition: all 0.2s ease;
 }
 
-button:active {
+.btn:active {
     transform: scale(0.98);
 }
 
@@ -80,7 +43,7 @@ input, textarea, select {
     width: 100%;
     padding: 10px;
     font-size: 16px; /* Prevents zoom on iOS */
-    border-radius: 4px;
+    border-radius: var(--kh-radius);
 }
 
 label {
@@ -110,25 +73,7 @@ p {
     margin-bottom: 8px;
 }
 
-/* Cards - full width */
-.card {
-    width: 100%;
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 12px;
-}
-
 /* Navigation - mobile menu */
-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-nav a {
-    padding: 12px;
-    display: block;
-}
 
 /* Search/Filter - stacked */
 .search-wrap, .filter-wrap {
@@ -183,10 +128,6 @@ nav a {
     }
 
     /* Navigation - horizontal */
-    nav {
-        flex-direction: row;
-        gap: 8px;
-    }
 
     /* Search/Filter - side by side */
     .search-wrap {
@@ -381,7 +322,7 @@ nav a {
         margin: 8px 0;
     }
 
-    button, .btn {
+    .btn {
         min-height: 36px;
         padding: 8px 12px;
         font-size: 13px;
@@ -394,7 +335,7 @@ nav a {
 
 @media (hover: none) and (pointer: coarse) {
     /* Increase touch targets */
-    button, .btn, a {
+    .btn {
         min-height: 48px;
         min-width: 48px;
     }
@@ -405,9 +346,6 @@ nav a {
     }
 
     /* Remove hover effects that don't work on touch */
-    button:hover {
-        background-color: initial;
-    }
 }
 
 /* ============================================ */
@@ -436,3 +374,4 @@ nav a {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+

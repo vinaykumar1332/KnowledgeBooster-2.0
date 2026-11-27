@@ -1,4 +1,4 @@
-/**
+﻿/**
  * UI Configuration
  * Centralized configuration for all UI text, labels, and button text
  * Easy to update without touching components
@@ -9,6 +9,14 @@ export const UI_CONFIG = {
     // AUTHENTICATION PAGE
     // ============================================
     AUTH: {
+        ASIDE: {
+            TITLE: "Learn together. Grow together.",
+            POINTS: [
+                "Free study notes shared by students",
+                "Search every shared PDF in one place",
+                "Upload from Google Drive in one step",
+            ],
+        },
         LOGIN: {
             TITLE: "Welcome Back",
             SUBTITLE: "Sign in to your account",
@@ -52,7 +60,11 @@ export const UI_CONFIG = {
             ERROR_PASSWORD_MISMATCH: "Passwords do not match",
             ERROR_WEAK_PASSWORD: "Password must be at least 6 characters",
             ERROR_TERMS_NOT_ACCEPTED: "Please accept terms",
-            SUCCESS_MESSAGE: "Account created! Redirecting...",
+            USER_TYPE_LABEL: "I am a",
+            USER_TYPE_PLACEHOLDER: "Select your role",
+            USER_TYPE_REQUIRED: "Choose the option that describes you",
+            ERROR_GENERIC: "Signup failed. Please try again.",
+            SUCCESS_MESSAGE: "Account created. Log in to continue.",
             PASSWORD_REQUIREMENT: "Min. 6 characters",
         },
     },
@@ -61,6 +73,53 @@ export const UI_CONFIG = {
     // UPLOAD PAGE
     // ============================================
     UPLOAD: {
+        PAGE_TITLE: "Share a PDF",
+        PAGE_SUBTITLE: "Paste a Google Drive link, describe it, and choose who it helps.",
+        STEP_LINK: "Google Drive link",
+        STEP_DETAILS: "Details",
+        STEP_AUDIENCE: "Who is it for?",
+        STEP_TOPIC: "Topic",
+        LINK_LABEL: "Share link",
+        LINK_HELP: "Use Share > Copy link in Google Drive, then paste it here.",
+        LINK_OK: "Link looks good",
+        LINK_FOLDER: "This is a folder link. Open the file itself and copy its link.",
+        LINK_INVALID: "This doesn't look like a Google Drive file link.",
+        LINK_HOWTO: "How do I get the link?",
+        LINK_STEPS: [
+            "Upload your PDF to Google Drive.",
+            "Right-click it and choose Share.",
+            "Set General access to \"Anyone with the link\".",
+            "Click Copy link and paste it above.",
+        ],
+        PREVIEW_FILE: "Preview file",
+        TITLE_REQUIRED: "Add a title",
+        TITLE_TOO_SHORT: "Use at least 3 characters",
+        AUDIENCE: {
+            student: { label: "Students", hint: "Notes, assignments, exam prep" },
+            professional: { label: "Professionals", hint: "Interview prep, reports, research" },
+            others: { label: "Everyone", hint: "Guides, books and general reading" },
+        },
+        TOPIC_LABEL: "Topic",
+        TOPIC_PLACEHOLDER: "Type or pick a topic",
+        TOPIC_HELP: "Pick one below or type your own.",
+        TOPIC_NEW: "\"{topic}\" will be added as a new topic",
+        TOPIC_REQUIRED: "Choose or type a topic",
+        TOPIC_DEFAULTS: {
+            student: ["Notes", "Assignments", "Exam Prep", "Question Papers", "Lab Manual", "Projects", "Syllabus", "Tutorial"],
+            professional: ["Interview Prep", "Tutorial", "Documentation", "Reports", "Case Studies", "Presentations", "Research", "Certification"],
+            others: ["Guides", "Books", "Reference", "General", "Misc"],
+        },
+        CARD_PREVIEW: "How it will look",
+        CARD_PREVIEW_TITLE: "Your title appears here",
+        POSTING_AS: "Posting as",
+        SUBMIT: "Share file",
+        SUBMITTING: "Sharing…",
+        CLEAR_FORM: "Clear form",
+        FIX_ERRORS: "Please fix the highlighted fields",
+        SUCCESS: "Shared! It's now in your uploads.",
+        DUPLICATE_FILE: "This file is already in the library. Use a different Drive link.",
+        DUPLICATE_TITLE: "A file with this title already exists. Try a more specific title.",
+        DUPLICATE_TOAST: "Duplicate detected — this file is already shared.",
         TITLE: "Upload File",
         SUBTITLE: "Share your study materials",
         YOUR_NAME_LABEL: "Your Name",
@@ -102,6 +161,22 @@ export const UI_CONFIG = {
     // ============================================
     FILES: {
         TITLE: "Browse Files",
+        SUBTITLE: "Study notes and PDFs shared by the community",
+        MINE_TITLE: "My Uploads",
+        MINE_SUBTITLE: "Everything you have shared",
+        MINE_EMPTY_TITLE: "No uploads yet",
+        MINE_EMPTY_TEXT: "Share your first PDF and it will show up here.",
+        UPLOAD_CTA: "Upload a PDF",
+        COUNT: "{shown} of {total} files",
+        ALL_CATEGORIES: "All",
+        TITLE_FILTER: "Title",
+        CLEAR_FILTERS: "Clear filters",
+        CLEAR_SEARCH: "Clear search",
+        SEARCH_SHORTCUT: "Press / to search",
+        PREVIEW: "Preview",
+        OPEN_IN_DRIVE: "Open in Drive",
+        LOADING_PREVIEW: "Loading preview…",
+        CLOSE_PREVIEW: "Close preview",
         SEARCH_PLACEHOLDER: "Search by title, category, or author...",
         FILTER_LABEL: "Filter by Title",
         FILTER_DEFAULT: "All Titles",
@@ -142,6 +217,14 @@ export const UI_CONFIG = {
     // NAVIGATION
     // ============================================
     NAV: {
+        BRAND: "Knowledge Hut 2.0",
+        BRAND_MARK: "KH",
+        MAIN_LABEL: "Main navigation",
+        ACCOUNT_LABEL: "Account menu",
+        THEME: "Theme",
+        SIGNED_OUT: "You have been signed out",
+        COLLAPSE: "Collapse sidebar",
+        EXPAND: "Expand sidebar",
         HOME: "Home",
         UPLOAD: "Upload",
         BROWSE: "Browse",
@@ -261,6 +344,21 @@ export const UI_CONFIG = {
     // ============================================
     PROFILE: {
         TITLE: "My Profile",
+        ROLE_FALLBACK: "Member",
+        STAT_UPLOADS: "Uploads",
+        STAT_CATEGORIES: "Categories",
+        STAT_TOPICS: "Topics",
+        RECENT_TITLE: "Recent uploads",
+        VIEW_ALL: "View all",
+        EMPTY_TITLE: "No uploads yet",
+        EMPTY_TEXT: "Share your first PDF and it will show up here.",
+        UPLOAD_CTA: "Upload a PDF",
+        LOAD_ERROR: "Could not load your uploads right now.",
+        PREFERENCES: "Preferences",
+        THEME_LABEL: "Appearance",
+        THEME_HINT: "Switch between light and dark mode",
+        ACCOUNT: "Account",
+        SIGN_OUT_HINT: "Sign out of this device",
         USERNAME_LABEL: "Full Name",
         EMAIL_LABEL: "Email Address",
         TOTAL_UPLOADS: "Total Uploads",
@@ -298,8 +396,6 @@ export const UI_CONFIG = {
         HERO_EYEBROW: "Free knowledge library",
         HERO_TITLE_PREFIX: "Welcome to",
         HERO_TITLE_BRAND: "KnowledgeHub",
-        UPLOAD_BTN: "Upload a PDF",
-        BROWSE_BTN: "Browse files",
         STAT_FILES: "Files shared",
         STAT_TITLES: "Topics",
         STAT_CONTRIBUTORS: "Contributors",
@@ -346,3 +442,4 @@ export const interpolate = (text, variables = {}) => {
 };
 
 export default UI_CONFIG;
+

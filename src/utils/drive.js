@@ -17,6 +17,19 @@ export function extractDriveFileId(url) {
   return "";
 }
 
+/**
+ * Checks a pasted link so the upload form can explain what is wrong.
+ * @returns {{ status: "empty" | "folder" | "invalid" | "ok", fileId: string }}
+ */
+export function classifyDriveLink(url) {
+  const value = String(url || "").trim();
+  if (!value) return { status: "empty", fileId: "" };
+  if (/\/folders\/|folderview/i.test(value)) return { status: "folder", fileId: "" };
+  if (!/^https?:\/\/(drive|docs)\.google\.com\//i.test(value)) return { status: "invalid", fileId: "" };
+  const fileId = extractDriveFileId(value);
+  return fileId ? { status: "ok", fileId } : { status: "invalid", fileId: "" };
+}
+
 export function extractFileId(item) {
   if (!item) return "";
 

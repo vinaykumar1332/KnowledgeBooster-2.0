@@ -13,6 +13,8 @@
 
 import express from 'express';
 import cors from 'cors';
+import { AUTH_ACTIONS, callAuth } from '../lib/authUpstream.js';
+import { buildTaxonomy } from '../lib/filesUpstream.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,11 +24,8 @@ const PORT = process.env.PORT || 3000;
 // ============================================
 const AUTH_SOURCE = process.env.AUTH_SOURCE || 'upstream';
 const FILES_SOURCE = process.env.FILES_SOURCE || 'upstream';
-const UPSTREAM_AUTH_URL = process.env.AUTH_URL
-    || 'https://script.google.com/macros/s/AKfycbyPpEMlCPtgy0AMZ8IBEKxwmJs91eh-EQSYuson0d2R9lZUUa1c02ghuK_dUhdJhMLJ/exec';
 const UPSTREAM_FILES_URL = process.env.FILES_URL
     || 'https://script.google.com/macros/s/AKfycbyM5SPa85Og4JuUKsyJceBPDloelFGlUIrrbGw3Yw-Jte5GrUC8JnmF0ZN_9pgIXvSzuw/exec';
-const UPSTREAM_AUTH_ACTIONS = new Set(['login', 'signup']);
 const FEATURED_LIMIT = 10;
 
 // Vite moves to 5174, 5176, ... when ports are busy, so accept any localhost port
@@ -147,13 +146,6 @@ app.get('/api/health', (req, res) => {
 // ============================================
 // AUTH
 // ============================================
-async function forwardAuth(req, res) {
-    const data = await postUpstream(UPSTREAM_AUTH_URL, req.body);
-    // Apps Script does not issue tokens; issue one here so uploads (Bearer auth) work locally.
-    if (data.ok) data.token = makeToken({ username: data.username, email: data.email });
-    return res.json(data);
-}
-
 const authActions = {
     login(req, res) {
         const { email, password } = req.body;
@@ -197,29 +189,43 @@ function runAuthAction(req, res, action) {
     return handler(req, res);
 }
 
-app.post('/api/auth', async (req, res) => {
-    const { script, action } = req.body || {};
-    if (script !== 'AUTH') return res.status(400).json({ ok: false, msg: 'Missing or invalid script' });
-    if (AUTH_SOURCE === 'upstream' && UPSTREAM_AUTH_ACTIONS.has(action)) {
+/**
+ * Login/signup go to Apps Script (same helper as the Vercel functions), which owns the
+ * { script: "AUTH", action } format. Everything else is answered by this server.
+ */
+async function handleAuth(req, res, action) {
+    if (AUTH_SOURCE === 'upstream' && AUTH_ACTIONS.has(action)) {
         try {
-            return await forwardAuth(req, res);
+            const data = await callAuth(action, req.body || {});
+            // Apps Script does not issue tokens; issue one here so uploads (Bearer auth) work locally.
+            if (data.ok) data.token = makeToken({ username: data.username, email: data.email });
+            return res.json(data);
         } catch (err) {
             return handleError(res, err);
         }
     }
     return runAuthAction(req, res, action);
-});
+}
 
-app.post('/api/auth/:action', (req, res) => runAuthAction(req, res, req.params.action));
+// Current contract used by the UI: the action is in the path, the body holds only the fields
+app.post('/api/auth/:action', (req, res) => handleAuth(req, res, req.params.action));
+
+// Older contract, kept for builds that still send { script: "AUTH", action } in the body
+app.post('/api/auth', (req, res) => {
+    const { script, action } = req.body || {};
+    if (script !== 'AUTH') return res.status(400).json({ ok: false, msg: 'Missing or invalid script' });
+    return handleAuth(req, res, action);
+});
 
 // ============================================
 // FILES
 // ============================================
 
-/** GET /api/files?offset&limit  (limit 0 or missing = all) */
+/** GET /api/files?offset&limit&email  (limit 0 or missing = all; email = one uploader) */
 app.get('/api/files', async (req, res) => {
     try {
-        const all = await loadFiles();
+        const email = norm(req.query.email);
+        const all = (await loadFiles()).filter((f) => !email || norm(f.email) === email);
         const { rows, total, offset, limit, hasMore } = page(all, req.query.offset, req.query.limit);
         res.json({ ok: true, rows, total, offset, limit, hasMore });
     } catch (err) {
@@ -238,6 +244,15 @@ app.get('/api/files/search', async (req, res) => {
         );
         const { rows, total, offset, limit, hasMore } = page(matches, req.query.offset, req.query.limit || 20);
         res.json({ ok: true, rows, total, offset, limit, hasMore, query });
+    } catch (err) {
+        handleError(res, err);
+    }
+});
+
+/** GET /api/taxonomy : topics (subcategories) in use per audience, most used first */
+app.get('/api/taxonomy', async (req, res) => {
+    try {
+        res.json({ ok: true, categories: buildTaxonomy(await loadFiles()) });
     } catch (err) {
         handleError(res, err);
     }
@@ -281,6 +296,32 @@ app.post('/api/files/upload', async (req, res) => {
     const fileid = extractDriveId(driveUrl);
     if (!fileid) return res.status(400).json({ ok: false, msg: 'Invalid Google Drive link' });
 
+    // Duplicate check: same fileId or same title already in the sheet
+    try {
+        const existing = await loadFiles();
+        const normTitle = norm(title);
+        const dupFile = existing.find((f) => f.fileid && f.fileid === fileid);
+        if (dupFile) {
+            return res.status(409).json({
+                ok: false,
+                duplicate: true,
+                duplicateType: 'file',
+                msg: `This file is already in the library (shared by ${dupFile.username || 'another user'}).`,
+            });
+        }
+        const dupTitle = existing.find((f) => norm(f.title) === normTitle);
+        if (dupTitle) {
+            return res.status(409).json({
+                ok: false,
+                duplicate: true,
+                duplicateType: 'title',
+                msg: `A file titled "${dupTitle.title}" already exists. Try a more specific title.`,
+            });
+        }
+    } catch {
+        // duplicate check failed — still attempt the upload rather than blocking
+    }
+
     const record = {
         timestamp: new Date().toString(),
         username: user.username,
@@ -296,8 +337,24 @@ app.post('/api/files/upload', async (req, res) => {
 
     try {
         if (FILES_SOURCE === 'upstream') {
-            const data = await postUpstream(UPSTREAM_FILES_URL, { action: 'save', ...record });
-            return res.status(data.ok ? 201 : 400).json({ ok: data.ok === true, msg: data.msg || (data.ok ? 'File saved' : 'Save failed') });
+            // Field names must match saveFile() in the Apps Script (camelCase)
+            const data = await postUpstream(UPSTREAM_FILES_URL, {
+                action: 'save',
+                username: record.username,
+                email: record.email,
+                category,
+                subcategory,
+                title,
+                description,
+                driveUrl,
+                fileId: fileid,
+                thumbnailUrl,
+            });
+            return res.status(data.ok ? 201 : 400).json({
+                ok: data.ok === true,
+                msg: data.msg || data.error || (data.ok ? 'File saved' : 'Save failed'),
+                duplicate: data.duplicate === true,
+            });
         }
         localFiles.push(record);
         return res.status(201).json({ ok: true, msg: 'File saved', file: record });
