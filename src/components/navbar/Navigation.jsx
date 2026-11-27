@@ -11,6 +11,7 @@ import {
     HouseIcon,
     LibraryIcon,
     LogOutIcon,
+    PlayCircleIcon,
     PlusIcon,
     UploadIcon,
     UserIcon,
@@ -28,6 +29,7 @@ const NAV_ITEMS = [
     { to: "/home", label: N.HOME, icon: HouseIcon },
     { to: "/files", label: N.BROWSE, icon: LibraryIcon },
     { to: "/upload", label: N.UPLOAD, icon: UploadIcon, primary: true },
+    { to: "/videos", label: "Videos", icon: PlayCircleIcon },
     { to: "/my-uploads", label: N.MY_FILES, icon: FolderUpIcon },
     { to: "/profile", label: N.PROFILE, icon: UserIcon },
 ];
@@ -214,7 +216,7 @@ export default function Navigation({ userName: nameProp = "", userEmail: emailPr
                     hidden && "translate-y-full"
                 )}
             >
-                <ul className="mx-auto m-0 grid h-16 max-w-md list-none grid-cols-5 items-center p-0">
+                <ul className="mx-auto m-0 grid h-16 max-w-lg list-none grid-cols-6 items-center p-0">
                     {NAV_ITEMS.map((item) => (
                         <li key={item.to} className="flex justify-center">
                             {item.primary ? (

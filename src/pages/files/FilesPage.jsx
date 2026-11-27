@@ -6,6 +6,7 @@ import React, { useCallback, useDeferredValue, useEffect, useMemo, useRef, useSt
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { InboxIcon, RotateCwIcon, SearchIcon, UploadIcon, XIcon } from "lucide-react";
 import { fetchFiles } from "../../services/filesService";
+import YouTubeSuggestions from "../../components/youtube/YouTubeSuggestions";
 import FileCard from "../../components/cards/FileCard";
 import FilePreviewModal from "../../components/preview/FilePreviewModal";
 import Button from "../../components/Button/Button";
@@ -278,6 +279,11 @@ export default function FilesPage({ mine = false }) {
                     </>
                 )}
             </div>
+
+            {/* YouTube suggestions — shown when user has typed a search query */}
+            {!mine && deferredQuery.trim() && (
+                <YouTubeSuggestions query={deferredQuery.trim()} />
+            )}
 
             {preview && (
                 <FilePreviewModal
