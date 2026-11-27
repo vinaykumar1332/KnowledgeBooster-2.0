@@ -15,12 +15,16 @@ function toSession(data) {
 }
 
 export async function login({ email, password }) {
-    return toSession(await api.post("/auth/login", { email: email.trim(), password }));
+    return toSession(
+        await api.post("/auth", { script: "AUTH", action: "login", email: email.trim(), password })
+    );
 }
 
 export async function signup({ username, email, password, confirmPassword, userType }) {
     return toSession(
-        await api.post("/auth/signup", {
+        await api.post("/auth", {
+            script: "AUTH",
+            action: "signup",
             username,
             email: email.trim(),
             password,

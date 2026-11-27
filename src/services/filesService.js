@@ -8,7 +8,11 @@ import { api } from "./apiClient";
  * @returns {Promise<{ ok: boolean, rows?: object[], total?: number, hasMore?: boolean, msg?: string }>}
  */
 export function fetchFiles({ offset = 0, limit = 20, email } = {}) {
-    return api.get("/files", { offset, limit, email });
+    const query = {};
+    if (offset > 0) query.offset = offset;
+    if (limit > 0) query.limit = limit;
+    if (email) query.email = email;
+    return api.get("/files", query);
 }
 
 /**
