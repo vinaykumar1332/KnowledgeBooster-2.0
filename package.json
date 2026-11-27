@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently --kill-others --names web,api --prefix-colors cyan,magenta \"npm run dev:frontend\" \"npm run dev:backend:simple\"",
-    "dev:backend:simple": "npm --prefix server run dev:simple",
+    "dev:backend:simple": "npm --prefix server run dev",
     "dev:backend:full": "npm --prefix server run dev",
     "dev:frontend": "vite --strictPort",
     "dev:full": "npm run dev",

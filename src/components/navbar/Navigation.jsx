@@ -7,10 +7,10 @@ import { NavLink } from "react-router-dom";
 import {
     ChevronLeftIcon,
     ChevronRightIcon,
-    FolderUpIcon,
     HouseIcon,
     LibraryIcon,
     LogOutIcon,
+    PlayCircleIcon,
     PlusIcon,
     UploadIcon,
     UserIcon,
@@ -25,11 +25,11 @@ import { cn } from "@/lib/utils";
 const N = UI_CONFIG.NAV;
 
 const NAV_ITEMS = [
-    { to: "/home", label: N.HOME, icon: HouseIcon },
-    { to: "/files", label: N.BROWSE, icon: LibraryIcon },
-    { to: "/upload", label: N.UPLOAD, icon: UploadIcon, primary: true },
-    { to: "/my-uploads", label: N.MY_FILES, icon: FolderUpIcon },
-    { to: "/profile", label: N.PROFILE, icon: UserIcon },
+    { to: "/home",     label: N.HOME,    icon: HouseIcon },
+    { to: "/files",    label: N.BROWSE,  icon: LibraryIcon },
+    { to: "/upload",   label: N.UPLOAD,  icon: UploadIcon, primary: true },
+    { to: "/videos",   label: "Videos",  icon: PlayCircleIcon },
+    { to: "/profile",  label: N.PROFILE, icon: UserIcon },
 ];
 
 function readStoredAuth() {
@@ -306,9 +306,6 @@ function AccountMenu({ userName, userEmail, onLogout }) {
                     <div className="my-1 h-px bg-border" />
                     <NavLink role="menuitem" to="/profile" onClick={() => setOpen(false)} className={itemClass}>
                         <UserIcon className="size-4" aria-hidden="true" /> {N.PROFILE}
-                    </NavLink>
-                    <NavLink role="menuitem" to="/my-uploads" onClick={() => setOpen(false)} className={itemClass}>
-                        <FolderUpIcon className="size-4" aria-hidden="true" /> {N.MY_FILES}
                     </NavLink>
                     <div className="my-1 h-px bg-border" />
                     <button role="menuitem" type="button" onClick={onLogout} className={cn(itemClass, "bg-transparent p-0 px-3")}>

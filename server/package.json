@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "Knowledge Hub Backend Server - Express.js",
   "type": "module",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server-simple.js",
-    "start:full": "node server.js",
-    "dev": "nodemon server.js",
-    "dev:simple": "node --watch --watch-path=. --watch-path=../lib server-simple.js"
+    "start": "node --env-file=../.env --env-file=.env index.js",
+    "dev": "node --env-file=../.env --env-file=.env --watch --watch-path=. --watch-path=../lib index.js",
+    "dev:legacy": "node --env-file=../.env --env-file=.env --watch --watch-path=. --watch-path=../lib server-simple.js"
   },
   "license": "MIT",
   "dependencies": {

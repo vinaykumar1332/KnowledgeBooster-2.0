@@ -20,6 +20,15 @@ export default defineConfig({
       "/api": {
         target: API_TARGET,
         changeOrigin: true,
+        // Silences ECONNRESET noise when the backend restarts during --watch
+        configure: (proxy) => {
+          proxy.on("error", (err, _req, res) => {
+            if (err.code === "ECONNRESET" || err.code === "ECONNREFUSED") {
+              res.writeHead(503, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ ok: false, msg: "Backend restarting — please retry" }));
+            }
+          });
+        },
       },
     },
   },
